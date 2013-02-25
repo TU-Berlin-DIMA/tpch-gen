@@ -1,6 +1,7 @@
 // auto-generatad base generator config C++ file
 
 #include "generator/base/BaseGeneratorSubsystem.h"
+#include "generator/SupplierGenerator.h"
 
 using namespace std;
 using namespace Poco;
@@ -15,6 +16,8 @@ AbstractSequenceGenerator::StageList initList()
 {
     AbstractSequenceGenerator::StageList tmp;
 
+    tmp.push_back(AbstractSequenceGenerator::Stage("supplier"));
+
     return tmp;
 }
 
@@ -23,6 +26,7 @@ const AbstractSequenceGenerator::StageList AbstractSequenceGenerator::STAGES(ini
 // register the record sequence generators
 void BaseGeneratorSubsystem::registerGenerators()
 {
+    registerGenerator<TPCHGen::SupplierGenerator>("supplier");
 }
 
 } // namespace Myriad

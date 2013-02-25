@@ -4,38 +4,43 @@
   <!-- configurable parameters -->
   <parameters>
     <!-- naming convention {generator_name}.{parameter_name} -->
-    <parameter key="customer.sequence.base_cardinality">1000</parameter>
+    <parameter key="supplier.sequence.base_cardinality">10000</parameter>
   </parameters>
 
   <!-- function configuration -->
   <functions>
-    <!-- example: Pr[customer.*] -->
-    <function key='Pr[customer.pk]' type='uniform_probability[I64u]'>
+    <!-- example: Pr[common.*] -->
+    <function key='Pr[common.ascii_char]' type='uniform_probability[Char]'>
+      <argument key='x_min' type='Char' value='(Char)97' />
+      <argument key='x_max' type='Char' value='(Char)123' />
+    </function>
+    <!-- example: Pr[supplier.*] -->
+    <function key='Pr[supplier.supp_key]' type='uniform_probability[I64u]'>
       <argument key='x_min' type='I64u' value='1' />
-      <argument key='x_max' type='I64u' value='${%customer.sequence.cardinality% + 1}' />
+      <argument key='x_max' type='I64u' value='${%supplier.sequence.cardinality% + 1}' />
     </function>
-    <function key='Pr[customer.gender]' type='combined_probability[Enum]'>
-      <argument key='path' type='String' value='${%ENV.config-dir% + "/distributions/core/demographics/gender.distribution"}' />
+    <function key='Pr[supplier.address_length]' type='uniform_probability[I16u]'>
+      <argument key='x_min' type='I16u' value='10' />
+      <argument key='x_max' type='I16u' value='41' />
     </function>
-    <function key='Pr[customer.first_name]' type='conditional_combined_probability[Enum;Enum]'>
-      <argument key='path' type='String' value='${%ENV.config-dir% + "/distributions/core/demographics/first_name.distribution"}' />
+    <function key='Pr[supplier.nation_key]' type='uniform_probability[I64u]'>
+      <argument key='x_min' type='I64u' value='0' />
+      <argument key='x_max' type='I64u' value='26' />
     </function>
-    <function key='Pr[customer.last_name]' type='combined_probability[Enum]'>
-      <argument key='path' type='String' value='${%ENV.config-dir% + "/distributions/core/demographics/last_name.distribution"}' />
+    <function key='Pr[supplier.phone_local_number]' type='uniform_probability[I16u]'>
+      <argument key='x_min' type='I16u' value='100' />
+      <argument key='x_max' type='I16u' value='1000' />
     </function>
-    <function key='Pr[customer.age]' type='normal_probability'>
-      <argument key='mean' type='I16u' value='48' />
-      <argument key='stddev' type='I16u' value='12' />
+    <function key='Pr[supplier.acct_bal]' type='uniform_probability[Decimal]'>
+      <argument key='x_min' type='I16u' value='-999.99' />
+      <argument key='x_max' type='I16u' value='9999.999' />
     </function>
-    <!-- add more functions here, supported probability type are: -->
-    <!--  * uniform_probability[T](T: x_min, T: x_max) -->
-    <!--  * normal_probability(Decimal: mean, Decimal: stddev) -->
-    <!--  * combined_probability[T](String: path) -->
   </functions>
 
   <!-- enumeration types -->
   <enum_sets>
     <!-- example: demographics.* -->
+    <!--
     <enum_set key='demographics.gender'>
       <argument key='path' type='String' value='${%ENV.config-dir% + "/domains/core/demographics/gender.domain"}' />
     </enum_set>
@@ -45,72 +50,96 @@
     <enum_set key='demographics.last_name'>
       <argument key='path' type='String' value='${%ENV.config-dir% + "/domains/core/demographics/last_name.domain"}' />
     </enum_set>
+    -->
   </enum_sets>
 
   <record_sequences>
-    <!-- example: customers -->
-    <random_sequence key="customer">
+    <!-- example: suppliers -->
+    <random_sequence key="supplier">
       <record_type>
-        <field name="pk" type="I64u" />
-        <field name='first_name' type='Enum' enumref='demographics.first_name' />
-        <field name='last_name'  type='Enum' enumref='demographics.last_name' />
-        <field name='gender' type='Enum' enumref='demographics.gender' />
-        <field name='age' type='I16u' />
-        <!-- add more fields and references here, supported types are: -->
-        <!--  * core types: I16, I16u, I32, I32u, I64, I64u, Decimal, String, Date -->
-        <!--  * enum types: Enum, with an additional enumref='{enum_set.key}' attribute -->
-        <!--  * ref. types: all record_sequence keys defined in this XML document -->
-        <!--
-        <field name='some_enum_parameter' type='Enum' enumref='enumset.key' />
-        <reference name='reference_alias' type='othertype_key' />
-        -->
+        <field name='supp_key' type='I64u' />
+        <field name='name' type='String' derived='true' />
+        <field name='address' type='Char[40]' />
+        <field name='nation_key' type='I16u' />
+        <field name='phone_local_number1' type='I16u' />
+        <field name='phone_local_number2' type='I16u' />
+        <field name='phone_local_number3' type='I16u' />
+        <field name='phone' type='String' derived='true' />
+        <field name='acct_bal' type='Decimal' />
+        <field name='comment' type='String' />
       </record_type>
+      <output_format type="csv">
+        <argument key='delimiter' type='Char' value='|' />
+        <argument key='field' type='field_ref' ref='supplier:supp_key' />
+        <argument key='field' type='field_ref' ref='supplier:name' />
+        <argument key='field' type='field_ref' ref='supplier:address' />
+        <argument key='field' type='field_ref' ref='supplier:nation_key' />
+        <argument key='field' type='field_ref' ref='supplier:phone' />
+        <argument key='field' type='field_ref' ref='supplier:acct_bal' />
+        <argument key='field' type='field_ref' ref='supplier:comment' />
+      </output_format>
       <setter_chain>
-        <setter key='set_pk' type='field_setter'>
-          <argument key='field' type='field_ref' ref='customer:pk' />
+        <setter key='set_supp_key' type='field_setter'>
+          <argument key='field' type='field_ref' ref='supplier:supp_key' />
           <argument key='value' type='clustered_value_provider'>
-            <argument key='probability' type='function_ref' ref='Pr[customer.pk]' />
+            <argument key='probability' type='function_ref' ref='Pr[supplier.supp_key]' />
             <argument key='cardinality' type='const_range_provider'>
               <argument key='min' type='I64u' value='0' />
-              <argument key='max' type='I64u' value='%customer.sequence.cardinality%' />
+              <argument key='max' type='I64u' value='%supplier.sequence.cardinality%' />
             </argument>
           </argument>
         </setter>
-        <setter key='set_gender' type='field_setter'>
-          <argument key='field' type='field_ref' ref='customer:gender' />
-          <argument key='value' type='random_value_provider'>
-            <argument key='probability' type='function_ref' ref='Pr[customer.gender]' />
+        <setter key='set_address' type='field_setter'>
+          <argument key='field' type='field_ref' ref='supplier:address' />
+          <argument key='value' type='element_wise_value_provider'>
+            <argument key='element_length_value_provider' type='random_value_provider'>
+              <argument key='probability' type='function_ref' ref='Pr[supplier.address_length]' />
+            </argument>
+            <argument key='element_value_provider' type='random_value_provider'>
+              <argument key='probability' type='function_ref' ref='Pr[common.ascii_char]' />
+            </argument>
           </argument>
         </setter>
-        <setter key='set_first_name' type='field_setter'>
-          <argument key='field' type='field_ref' ref='customer:first_name' />
+        <setter key='set_nation_key' type='field_setter'>
+          <argument key='field' type='field_ref' ref='supplier:nation_key' />
           <argument key='value' type='random_value_provider'>
-            <argument key='probability' type='function_ref' ref='Pr[customer.first_name]' />
-            <argument key='condition_field' type='field_ref' ref='customer:gender' />
+            <argument key='probability' type='function_ref' ref='Pr[supplier.nation_key]' />
           </argument>
         </setter>
-        <setter key='set_last_name' type='field_setter'>
-          <argument key='field' type='field_ref' ref='customer:last_name' />
+        <setter key='set_phone_local_number1' type='field_setter'>
+          <argument key='field' type='field_ref' ref='supplier:phone_local_number1' />
           <argument key='value' type='random_value_provider'>
-            <argument key='probability' type='function_ref' ref='Pr[customer.last_name]' />
+            <argument key='probability' type='function_ref' ref='Pr[supplier.phone_local_number]' />
           </argument>
         </setter>
-        <setter key='set_age' type='field_setter'>
-          <argument key='field' type='field_ref' ref='customer:age' />
+        <setter key='set_phone_local_number2' type='field_setter'>
+          <argument key='field' type='field_ref' ref='supplier:phone_local_number2' />
           <argument key='value' type='random_value_provider'>
-            <argument key='probability' type='function_ref' ref='Pr[customer.age]' />
+            <argument key='probability' type='function_ref' ref='Pr[supplier.phone_local_number]' />
           </argument>
         </setter>
-        <!-- add more hydrators here, supported hydrator types are: -->
-        <!--  * randomized_sequence_hydrator<RT>(RT#Setter: field, I64u: cardinality, I64u: begin, I64u: end) -->
+        <setter key='set_phone_local_number3' type='field_setter'>
+          <argument key='field' type='field_ref' ref='supplier:phone_local_number3' />
+          <argument key='value' type='random_value_provider'>
+            <argument key='probability' type='function_ref' ref='Pr[supplier.phone_local_number]' />
+          </argument>
+        </setter>
+        <setter key='set_acct_bal' type='field_setter'>
+          <argument key='field' type='field_ref' ref='supplier:acct_bal' />
+          <argument key='value' type='random_value_provider'>
+            <argument key='probability' type='function_ref' ref='Pr[supplier.acct_bal]' />
+          </argument>
+        </setter>
+        <setter key='set_comment' type='field_setter'> <!-- @FIXME: generate according to specification -->
+          <argument key='field' type='field_ref' ref='supplier:comment' />
+          <argument key='value' type='const_value_provider'>
+            <argument key='value' type='String' value='placeholder comment' />
+          </argument>
+        </setter>
       </setter_chain>
-      <!-- supported cardinality estimator types are: -->
-      <!--  * linear_scale_estimator(I64u: base_cardinality) -->
       <cardinality_estimator type="linear_scale_estimator">
-        <argument key="base_cardinality" type="I64u" value="%customer.sequence.base_cardinality%" />
+        <argument key="base_cardinality" type="I64u" value="%supplier.sequence.base_cardinality%" />
       </cardinality_estimator>
-      <!-- supported sequence_iterator types: -->
-      <!--  * partitioned_iterator() -->
       <sequence_iterator type="partitioned_iterator" />
     </random_sequence>
   </record_sequences>
