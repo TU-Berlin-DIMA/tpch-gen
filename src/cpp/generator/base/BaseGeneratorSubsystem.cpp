@@ -2,6 +2,7 @@
 
 #include "generator/base/BaseGeneratorSubsystem.h"
 #include "generator/SupplierGenerator.h"
+#include "generator/PartGenerator.h"
 
 using namespace std;
 using namespace Poco;
@@ -17,6 +18,7 @@ AbstractSequenceGenerator::StageList initList()
     AbstractSequenceGenerator::StageList tmp;
 
     tmp.push_back(AbstractSequenceGenerator::Stage("supplier"));
+    tmp.push_back(AbstractSequenceGenerator::Stage("part"));
 
     return tmp;
 }
@@ -27,6 +29,7 @@ const AbstractSequenceGenerator::StageList AbstractSequenceGenerator::STAGES(ini
 void BaseGeneratorSubsystem::registerGenerators()
 {
     registerGenerator<TPCHGen::SupplierGenerator>("supplier");
+    registerGenerator<TPCHGen::PartGenerator>("part");
 }
 
 } // namespace Myriad

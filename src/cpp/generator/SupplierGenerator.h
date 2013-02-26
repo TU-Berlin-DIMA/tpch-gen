@@ -3,8 +3,6 @@
 
 #include "generator/base/BaseSupplierGenerator.h"
 
-using namespace Myriad;
-
 namespace TPCHGen {
 
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -15,9 +13,9 @@ class SupplierGenerator: public BaseSupplierGenerator
 {
 public:
 
-    typedef RecordTraits<Supplier>::SetterChainType SetterChainType;
+    typedef Myriad::RecordTraits<Supplier>::SetterChainType SetterChainType;
 
-    SupplierGenerator(const string& name, GeneratorConfig& config, NotificationCenter& notificationCenter) :
+    SupplierGenerator(const string& name, Myriad::GeneratorConfig& config, NotificationCenter& notificationCenter) :
         BaseSupplierGenerator(name, config, notificationCenter)
     {
     }

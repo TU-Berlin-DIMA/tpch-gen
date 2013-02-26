@@ -1,0 +1,71 @@
+@numberofexactvals = 64
+@numberofbins = 0
+@nullprobability = 0.0
+# lowercase letters
+p(X) = 0.02                      for X = { 'a' }
+p(X) = 0.02                      for X = { 'b' }
+p(X) = 0.02                      for X = { 'c' }
+p(X) = 0.02                      for X = { 'd' }
+p(X) = 0.02                      for X = { 'e' }
+p(X) = 0.02                      for X = { 'f' }
+p(X) = 0.02                      for X = { 'g' }
+p(X) = 0.02                      for X = { 'h' }
+p(X) = 0.02                      for X = { 'i' }
+p(X) = 0.02                      for X = { 'j' }
+p(X) = 0.02                      for X = { 'k' }
+p(X) = 0.02                      for X = { 'l' }
+p(X) = 0.02                      for X = { 'm' }
+p(X) = 0.02                      for X = { 'n' }
+p(X) = 0.02                      for X = { 'o' }
+p(X) = 0.02                      for X = { 'p' }
+p(X) = 0.02                      for X = { 'q' }
+p(X) = 0.02                      for X = { 'r' }
+p(X) = 0.02                      for X = { 's' }
+p(X) = 0.02                      for X = { 't' }
+p(X) = 0.02                      for X = { 'u' }
+p(X) = 0.02                      for X = { 'v' }
+p(X) = 0.02                      for X = { 'w' }
+p(X) = 0.02                      for X = { 'x' }
+p(X) = 0.02                      for X = { 'y' }
+p(X) = 0.02                      for X = { 'z' }
+# uppercase letters
+p(X) = 0.01                      for X = { 'A' }
+p(X) = 0.01                      for X = { 'B' }
+p(X) = 0.01                      for X = { 'C' }
+p(X) = 0.01                      for X = { 'D' }
+p(X) = 0.01                      for X = { 'E' }
+p(X) = 0.01                      for X = { 'F' }
+p(X) = 0.01                      for X = { 'G' }
+p(X) = 0.01                      for X = { 'H' }
+p(X) = 0.01                      for X = { 'I' }
+p(X) = 0.01                      for X = { 'J' }
+p(X) = 0.01                      for X = { 'K' }
+p(X) = 0.01                      for X = { 'L' }
+p(X) = 0.01                      for X = { 'M' }
+p(X) = 0.01                      for X = { 'N' }
+p(X) = 0.01                      for X = { 'O' }
+p(X) = 0.01                      for X = { 'P' }
+p(X) = 0.01                      for X = { 'Q' }
+p(X) = 0.01                      for X = { 'R' }
+p(X) = 0.01                      for X = { 'S' }
+p(X) = 0.01                      for X = { 'T' }
+p(X) = 0.01                      for X = { 'U' }
+p(X) = 0.01                      for X = { 'V' }
+p(X) = 0.01                      for X = { 'W' }
+p(X) = 0.01                      for X = { 'X' }
+p(X) = 0.01                      for X = { 'Y' }
+p(X) = 0.01                      for X = { 'Z' }
+# numerics
+p(X) = 0.01                      for X = { '0' }
+p(X) = 0.01                      for X = { '1' }
+p(X) = 0.01                      for X = { '2' }
+p(X) = 0.01                      for X = { '3' }
+p(X) = 0.01                      for X = { '4' }
+p(X) = 0.01                      for X = { '5' }
+p(X) = 0.01                      for X = { '6' }
+p(X) = 0.01                      for X = { '7' }
+p(X) = 0.01                      for X = { '8' }
+p(X) = 0.01                      for X = { '9' }
+# separators
+p(X) = 0.01                      for X = { ' ' }
+p(X) = 0.01                      for X = { ',' }

@@ -5,15 +5,13 @@
 
 #include "record/base/BaseSupplierMeta.h"
 
-using namespace Myriad;
-
 namespace TPCHGen {
 
 class SupplierMeta : public BaseSupplierMeta
 {
 public:
 
-    SupplierMeta(const EnumSetPool& enumSets) :
+    SupplierMeta(const Myriad::EnumSetPool& enumSets) :
         BaseSupplierMeta(enumSets)
     {
     }

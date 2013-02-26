@@ -6,35 +6,33 @@
 #include "generator/RandomSequenceGenerator.h"
 #include "runtime/setter/SupplierSetterChain.h"
 
-using namespace Myriad;
-
 namespace TPCHGen {
 
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 // AbstractSequenceGenerator specialization (base class)
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
-class BaseSupplierGenerator: public RandomSequenceGenerator<Supplier>
+class BaseSupplierGenerator: public Myriad::RandomSequenceGenerator<Supplier>
 {
 public:
 
-    BaseSupplierGenerator(const string& name, GeneratorConfig& config, NotificationCenter& notificationCenter) :
-        RandomSequenceGenerator<Supplier>(name, config, notificationCenter)
+    BaseSupplierGenerator(const string& name, Myriad::GeneratorConfig& config, NotificationCenter& notificationCenter) :
+        Myriad::RandomSequenceGenerator<Supplier>(name, config, notificationCenter)
     {
     }
 
-    void prepare(Stage stage, const GeneratorPool& pool)
+    void prepare(Stage stage, const Myriad::GeneratorPool& pool)
     {
         // call generator implementation
-        RandomSequenceGenerator<Supplier>::prepare(stage, pool);
+        Myriad::RandomSequenceGenerator<Supplier>::prepare(stage, pool);
 
         if (stage.name() == name())
         {
-            registerTask(new PartitionedSequenceIteratorTask< Supplier > (*this, _config));
+            registerTask(new Myriad::PartitionedSequenceIteratorTask< Supplier > (*this, _config));
         }
     }
 
-    SupplierSetterChain setterChain(BaseSetterChain::OperationMode opMode, RandomStream& random)
+    SupplierSetterChain setterChain(Myriad::BaseSetterChain::OperationMode opMode, Myriad::RandomStream& random)
     {
         return SupplierSetterChain(opMode, random, _config);
     }

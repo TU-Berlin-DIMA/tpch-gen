@@ -5,14 +5,14 @@
   <parameters>
     <!-- naming convention {generator_name}.{parameter_name} -->
     <parameter key="supplier.sequence.base_cardinality">10000</parameter>
+    <parameter key="part.sequence.base_cardinality">200000</parameter>
   </parameters>
 
   <!-- function configuration -->
   <functions>
     <!-- example: Pr[common.*] -->
-    <function key='Pr[common.ascii_char]' type='uniform_probability[Char]'>
-      <argument key='x_min' type='Char' value='(Char)97' />
-      <argument key='x_max' type='Char' value='(Char)123' />
+    <function key='Pr[common.ascii_char]' type='combined_probability[Char]'>
+      <argument key='path' type='String' value='${%ENV.config-dir% + "/distributions/ascii_char.distribution"}' />
     </function>
     <!-- example: Pr[supplier.*] -->
     <function key='Pr[supplier.supp_key]' type='uniform_probability[I64u]'>
@@ -35,26 +35,47 @@
       <argument key='x_min' type='I16u' value='-999.99' />
       <argument key='x_max' type='I16u' value='9999.999' />
     </function>
+    <!-- example: Pr[part.*] -->
+    <function key='Pr[part.part_key]' type='uniform_probability[I64u]'>
+      <argument key='x_min' type='I64u' value='1' />
+      <argument key='x_max' type='I64u' value='${%part.sequence.cardinality% + 1}' />
+    </function>
+    <function key='Pr[part.param]' type='uniform_probability[I16u]'>
+      <argument key='x_min' type='Enum' value='1' />
+      <argument key='x_max' type='Enum' value='6' />
+    </function>
+    <function key='Pr[part.name_component]' type='uniform_probability[Enum]'>
+      <argument key='x_min' type='Enum' value='0' />
+      <argument key='x_max' type='Enum' value='92' />
+    </function>
+    <function key='Pr[part.type]' type='uniform_probability[Enum]'>
+      <argument key='x_min' type='Enum' value='0' />
+      <argument key='x_max' type='Enum' value='150' />
+    </function>
+    <function key='Pr[part.size]' type='uniform_probability[I16u]'>
+      <argument key='x_min' type='I16u' value='1' />
+      <argument key='x_max' type='I16u' value='51' />
+    </function>
+    <function key='Pr[part.container]' type='uniform_probability[Enum]'>
+      <argument key='x_min' type='Enum' value='0' />
+      <argument key='x_max' type='Enum' value='40' />
+    </function>
   </functions>
 
   <!-- enumeration types -->
   <enum_sets>
-    <!-- example: demographics.* -->
-    <!--
-    <enum_set key='demographics.gender'>
-      <argument key='path' type='String' value='${%ENV.config-dir% + "/domains/core/demographics/gender.domain"}' />
+    <enum_set key='part.name_component'>
+      <argument key='path' type='String' value='${%ENV.config-dir% + "/domains/part/name_component.domain"}' />
     </enum_set>
-    <enum_set key='demographics.first_name'>
-      <argument key='path' type='String' value='${%ENV.config-dir% + "/domains/core/demographics/first_name.domain"}' />
+    <enum_set key='part.type'>
+      <argument key='path' type='String' value='${%ENV.config-dir% + "/domains/part/type.domain"}' />
     </enum_set>
-    <enum_set key='demographics.last_name'>
-      <argument key='path' type='String' value='${%ENV.config-dir% + "/domains/core/demographics/last_name.domain"}' />
+    <enum_set key='part.container'>
+      <argument key='path' type='String' value='${%ENV.config-dir% + "/domains/part/container.domain"}' />
     </enum_set>
-    -->
   </enum_sets>
 
   <record_sequences>
-    <!-- example: suppliers -->
     <random_sequence key="supplier">
       <record_type>
         <field name='supp_key' type='I64u' />
@@ -69,6 +90,7 @@
         <field name='comment' type='String' />
       </record_type>
       <output_format type="csv">
+        <argument key='quoted' type='Bool' value='false' />
         <argument key='delimiter' type='Char' value='|' />
         <argument key='field' type='field_ref' ref='supplier:supp_key' />
         <argument key='field' type='field_ref' ref='supplier:name' />
@@ -81,9 +103,9 @@
       <setter_chain>
         <setter key='set_supp_key' type='field_setter'>
           <argument key='field' type='field_ref' ref='supplier:supp_key' />
-          <argument key='value' type='clustered_value_provider'>
+          <argument key='value' type='clustered_value_provider[I64u]'>
             <argument key='probability' type='function_ref' ref='Pr[supplier.supp_key]' />
-            <argument key='cardinality' type='const_range_provider'>
+            <argument key='cardinality' type='const_range_provider[I64u]'>
               <argument key='min' type='I64u' value='0' />
               <argument key='max' type='I64u' value='%supplier.sequence.cardinality%' />
             </argument>
@@ -132,13 +154,106 @@
         </setter>
         <setter key='set_comment' type='field_setter'> <!-- @FIXME: generate according to specification -->
           <argument key='field' type='field_ref' ref='supplier:comment' />
-          <argument key='value' type='const_value_provider'>
-            <argument key='value' type='String' value='placeholder comment' />
+          <argument key='value' type='const_value_provider[String]'>
+            <argument key='value' type='String' value='temporary placeholder for a random comment' />
           </argument>
         </setter>
       </setter_chain>
       <cardinality_estimator type="linear_scale_estimator">
         <argument key="base_cardinality" type="I64u" value="%supplier.sequence.base_cardinality%" />
+      </cardinality_estimator>
+      <sequence_iterator type="partitioned_iterator" />
+    </random_sequence>
+    
+    <random_sequence key="part">
+      <record_type>
+        <field name='part_key' type='I64u' />
+        <field name='param_M' type='I16u' />
+        <field name='param_N' type='I16u' />
+        <field name='name_components' type='Enum[5]' enumref='part.name_component' />
+        <field name='name' type='String' derived='true' />
+        <field name='mfgr' type='String' derived='true' />
+        <field name='brand' type='String' derived='true' />
+        <field name='type' type='Enum' enumref='part.type' />
+        <field name='size' type='I16u' />
+        <field name='container' type='Enum' enumref='part.container' />
+        <field name='retail_price' type='Decimal' derived='true' />
+        <field name='comment' type='String' />
+      </record_type>
+      <output_format type="csv">
+        <argument key='quoted' type='Bool' value='false' />
+        <argument key='delimiter' type='Char' value='|' />
+        <argument key='field' type='field_ref' ref='part:part_key' />
+        <argument key='field' type='field_ref' ref='part:name' />
+        <argument key='field' type='field_ref' ref='part:mfgr' />
+        <argument key='field' type='field_ref' ref='part:brand' />
+        <argument key='field' type='field_ref' ref='part:type' />
+        <argument key='field' type='field_ref' ref='part:size' />
+        <argument key='field' type='field_ref' ref='part:container' />
+        <argument key='field' type='field_ref' ref='part:retail_price' />
+        <argument key='field' type='field_ref' ref='part:comment' />
+      </output_format>
+      <setter_chain>
+        <setter key='set_part_key' type='field_setter'>
+          <argument key='field' type='field_ref' ref='part:part_key' />
+          <argument key='value' type='clustered_value_provider[I64u]'>
+            <argument key='probability' type='function_ref' ref='Pr[part.part_key]' />
+            <argument key='cardinality' type='const_range_provider[I64u]'>
+              <argument key='min' type='I64u' value='0' />
+              <argument key='max' type='I64u' value='%part.sequence.cardinality%' />
+            </argument>
+          </argument>
+        </setter>
+        <setter key='set_param_M' type='field_setter'>
+          <argument key='field' type='field_ref' ref='part:param_M' />
+          <argument key='value' type='random_value_provider'>
+            <argument key='probability' type='function_ref' ref='Pr[part.param]' />
+          </argument>
+        </setter>
+        <setter key='set_param_N' type='field_setter'>
+          <argument key='field' type='field_ref' ref='part:param_N' />
+          <argument key='value' type='random_value_provider'>
+            <argument key='probability' type='function_ref' ref='Pr[part.param]' />
+          </argument>
+        </setter>
+        <setter key='set_name_components' type='field_setter'>
+          <argument key='field' type='field_ref' ref='part:name_components' />
+          <argument key='value' type='element_wise_value_provider'>
+            <argument key='element_length_value_provider' type='const_value_provider[I16u]'>
+              <argument key='value' type='I16u' value='5' />
+            </argument>
+            <argument key='element_value_provider' type='random_value_provider'>
+              <argument key='probability' type='function_ref' ref='Pr[part.name_component]' />
+            </argument>
+          </argument>
+        </setter>
+        <setter key='set_type' type='field_setter'>
+          <argument key='field' type='field_ref' ref='part:type' />
+          <argument key='value' type='random_value_provider'>
+            <argument key='probability' type='function_ref' ref='Pr[part.type]' />
+          </argument>
+        </setter>
+        <setter key='set_size' type='field_setter'>
+          <argument key='field' type='field_ref' ref='part:size' />
+          <argument key='value' type='random_value_provider'>
+            <argument key='probability' type='function_ref' ref='Pr[part.size]' />
+          </argument>
+        </setter>
+        <setter key='set_container' type='field_setter'>
+          <argument key='field' type='field_ref' ref='part:container' />
+          <argument key='value' type='random_value_provider'>
+            <argument key='probability' type='function_ref' ref='Pr[part.container]' />
+          </argument>
+        </setter>
+        <setter key='set_comment' type='field_setter'> <!-- @FIXME: generate according to specification -->
+          <argument key='field' type='field_ref' ref='part:comment' />
+          <argument key='value' type='const_value_provider[String]'>
+            <argument key='value' type='String' value='temporary placeholder for a random comment' />
+          </argument>
+        </setter>
+      </setter_chain>
+      <cardinality_estimator type="linear_scale_estimator">
+        <argument key="base_cardinality" type="I64u" value="%part.sequence.base_cardinality%" />
       </cardinality_estimator>
       <sequence_iterator type="partitioned_iterator" />
     </random_sequence>

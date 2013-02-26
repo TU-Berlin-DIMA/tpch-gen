@@ -14,8 +14,6 @@
 #include "runtime/provider/value/RandomValueProvider.h"
 #include "runtime/setter/FieldSetter.h"
 
-using namespace Myriad;
-
 namespace TPCHGen {
 
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -25,60 +23,60 @@ namespace TPCHGen {
 /**
  * SetterChain specialization for User.
  */
-class BaseSupplierSetterChain : public SetterChain<Supplier>
+class BaseSupplierSetterChain : public Myriad::SetterChain<Supplier>
 {
 public:
 
     // runtime component typedefs
     // runtime components for setter `set_supp_key`
-    typedef ConstRangeProvider< I64u, Supplier > RangeProvider01Type;
-    typedef ClusteredValueProvider< I64u, Supplier, UniformPrFunction<I64u>, RangeProvider01Type > ValueProvider01Type;
-    typedef FieldSetter< Supplier, RecordTraits<Supplier>::SUPP_KEY, ValueProvider01Type > SetSuppKeyType;
+    typedef Myriad::ConstRangeProvider< I64u, Supplier > RangeProvider01Type;
+    typedef Myriad::ClusteredValueProvider< I64u, Supplier, Myriad::UniformPrFunction<I64u>, RangeProvider01Type > ValueProvider01Type;
+    typedef Myriad::FieldSetter< Supplier, Myriad::RecordTraits<Supplier>::SUPP_KEY, ValueProvider01Type > SetSuppKeyType;
     // runtime components for setter `set_address`
-    typedef RandomValueProvider< Char, Supplier, UniformPrFunction<Char>, 0 > ValueProvider02Type;
-    typedef RandomValueProvider< I16u, Supplier, UniformPrFunction<I16u>, 0 > ValueProvider03Type;
-    typedef ElementWiseValueProvider< Char, Supplier, 40 > ValueProvider04Type;
-    typedef FieldSetter< Supplier, RecordTraits<Supplier>::ADDRESS, ValueProvider04Type > SetAddressType;
+    typedef Myriad::RandomValueProvider< Char, Supplier, Myriad::CombinedPrFunction<Char>, 0 > ValueProvider02Type;
+    typedef Myriad::RandomValueProvider< I16u, Supplier, Myriad::UniformPrFunction<I16u>, 0 > ValueProvider03Type;
+    typedef Myriad::ElementWiseValueProvider< Char, Supplier, 40 > ValueProvider04Type;
+    typedef Myriad::FieldSetter< Supplier, Myriad::RecordTraits<Supplier>::ADDRESS, ValueProvider04Type > SetAddressType;
     // runtime components for setter `set_nation_key`
-    typedef RandomValueProvider< I64u, Supplier, UniformPrFunction<I64u>, 0 > ValueProvider05Type;
-    typedef FieldSetter< Supplier, RecordTraits<Supplier>::NATION_KEY, ValueProvider05Type > SetNationKeyType;
+    typedef Myriad::RandomValueProvider< I64u, Supplier, Myriad::UniformPrFunction<I64u>, 0 > ValueProvider05Type;
+    typedef Myriad::FieldSetter< Supplier, Myriad::RecordTraits<Supplier>::NATION_KEY, ValueProvider05Type > SetNationKeyType;
     // runtime components for setter `set_phone_local_number1`
-    typedef RandomValueProvider< I16u, Supplier, UniformPrFunction<I16u>, 0 > ValueProvider06Type;
-    typedef FieldSetter< Supplier, RecordTraits<Supplier>::PHONE_LOCAL_NUMBER1, ValueProvider06Type > SetPhoneLocalNumber1Type;
+    typedef Myriad::RandomValueProvider< I16u, Supplier, Myriad::UniformPrFunction<I16u>, 0 > ValueProvider06Type;
+    typedef Myriad::FieldSetter< Supplier, Myriad::RecordTraits<Supplier>::PHONE_LOCAL_NUMBER1, ValueProvider06Type > SetPhoneLocalNumber1Type;
     // runtime components for setter `set_phone_local_number2`
-    typedef RandomValueProvider< I16u, Supplier, UniformPrFunction<I16u>, 0 > ValueProvider07Type;
-    typedef FieldSetter< Supplier, RecordTraits<Supplier>::PHONE_LOCAL_NUMBER2, ValueProvider07Type > SetPhoneLocalNumber2Type;
+    typedef Myriad::RandomValueProvider< I16u, Supplier, Myriad::UniformPrFunction<I16u>, 0 > ValueProvider07Type;
+    typedef Myriad::FieldSetter< Supplier, Myriad::RecordTraits<Supplier>::PHONE_LOCAL_NUMBER2, ValueProvider07Type > SetPhoneLocalNumber2Type;
     // runtime components for setter `set_phone_local_number3`
-    typedef RandomValueProvider< I16u, Supplier, UniformPrFunction<I16u>, 0 > ValueProvider08Type;
-    typedef FieldSetter< Supplier, RecordTraits<Supplier>::PHONE_LOCAL_NUMBER3, ValueProvider08Type > SetPhoneLocalNumber3Type;
+    typedef Myriad::RandomValueProvider< I16u, Supplier, Myriad::UniformPrFunction<I16u>, 0 > ValueProvider08Type;
+    typedef Myriad::FieldSetter< Supplier, Myriad::RecordTraits<Supplier>::PHONE_LOCAL_NUMBER3, ValueProvider08Type > SetPhoneLocalNumber3Type;
     // runtime components for setter `set_acct_bal`
-    typedef RandomValueProvider< Decimal, Supplier, UniformPrFunction<Decimal>, 0 > ValueProvider09Type;
-    typedef FieldSetter< Supplier, RecordTraits<Supplier>::ACCT_BAL, ValueProvider09Type > SetAcctBalType;
+    typedef Myriad::RandomValueProvider< Decimal, Supplier, Myriad::UniformPrFunction<Decimal>, 0 > ValueProvider09Type;
+    typedef Myriad::FieldSetter< Supplier, Myriad::RecordTraits<Supplier>::ACCT_BAL, ValueProvider09Type > SetAcctBalType;
     // runtime components for setter `set_comment`
-    typedef ConstValueProvider< String, Supplier > ValueProvider10Type;
-    typedef FieldSetter< Supplier, RecordTraits<Supplier>::COMMENT, ValueProvider10Type > SetCommentType;
+    typedef Myriad::ConstValueProvider< String, Supplier > ValueProvider10Type;
+    typedef Myriad::FieldSetter< Supplier, Myriad::RecordTraits<Supplier>::COMMENT, ValueProvider10Type > SetCommentType;
 
-    BaseSupplierSetterChain(OperationMode& opMode, RandomStream& random, GeneratorConfig& config) :
-        SetterChain<Supplier>(opMode, random),
+    BaseSupplierSetterChain(Myriad::BaseSetterChain::OperationMode& opMode, Myriad::RandomStream& random, Myriad::GeneratorConfig& config) :
+        Myriad::SetterChain<Supplier>(opMode, random),
         _sequenceCardinality(config.cardinality("supplier")),
         _rangeProvider01(0, config.parameter<I64u>("supplier.sequence.cardinality")),
-        _valueProvider01(config.function< UniformPrFunction<I64u> >("Pr[supplier.supp_key]"), _rangeProvider01),
+        _valueProvider01(config.function< Myriad::UniformPrFunction<I64u> >("Pr[supplier.supp_key]"), _rangeProvider01),
         _setSuppKey(_valueProvider01),
-        _valueProvider02(config.function< UniformPrFunction<Char> >("Pr[common.ascii_char]")),
-        _valueProvider03(config.function< UniformPrFunction<I16u> >("Pr[supplier.address_length]")),
+        _valueProvider02(config.function< Myriad::CombinedPrFunction<Char> >("Pr[common.ascii_char]")),
+        _valueProvider03(config.function< Myriad::UniformPrFunction<I16u> >("Pr[supplier.address_length]")),
         _valueProvider04(_valueProvider02, _valueProvider03),
         _setAddress(_valueProvider04),
-        _valueProvider05(config.function< UniformPrFunction<I64u> >("Pr[supplier.nation_key]")),
+        _valueProvider05(config.function< Myriad::UniformPrFunction<I64u> >("Pr[supplier.nation_key]")),
         _setNationKey(_valueProvider05),
-        _valueProvider06(config.function< UniformPrFunction<I16u> >("Pr[supplier.phone_local_number]")),
+        _valueProvider06(config.function< Myriad::UniformPrFunction<I16u> >("Pr[supplier.phone_local_number]")),
         _setPhoneLocalNumber1(_valueProvider06),
-        _valueProvider07(config.function< UniformPrFunction<I16u> >("Pr[supplier.phone_local_number]")),
+        _valueProvider07(config.function< Myriad::UniformPrFunction<I16u> >("Pr[supplier.phone_local_number]")),
         _setPhoneLocalNumber2(_valueProvider07),
-        _valueProvider08(config.function< UniformPrFunction<I16u> >("Pr[supplier.phone_local_number]")),
+        _valueProvider08(config.function< Myriad::UniformPrFunction<I16u> >("Pr[supplier.phone_local_number]")),
         _setPhoneLocalNumber3(_valueProvider08),
-        _valueProvider09(config.function< UniformPrFunction<Decimal> >("Pr[supplier.acct_bal]")),
+        _valueProvider09(config.function< Myriad::UniformPrFunction<Decimal> >("Pr[supplier.acct_bal]")),
         _setAcctBal(_valueProvider09),
-        _valueProvider10("placeholder comment"),
+        _valueProvider10("temporary placeholder for a random comment"),
         _setComment(_valueProvider10),
         _logger(Logger::get("supplier.setter.chain"))
     {
@@ -111,9 +109,9 @@ public:
     /**
      * Predicate filter function.
      */
-    virtual Interval<I64u> filter(const EqualityPredicate<Supplier>& predicate)
+    virtual Myriad::Interval<I64u> filter(const Myriad::EqualityPredicate<Supplier>& predicate)
     {
-        Interval<I64u> result(0, _sequenceCardinality);
+        Myriad::Interval<I64u> result(0, _sequenceCardinality);
 
         // apply inverse setter chain
         _setSuppKey.filterRange(predicate, result);

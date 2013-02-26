@@ -3,10 +3,8 @@
 #ifndef BASESUPPLIER_H_
 #define BASESUPPLIER_H_
 
-#include "record/Record.h"
+#include "record/AbstractRecord.h"
 #include "record/SupplierMeta.h"
-
-using namespace Myriad;
 
 namespace TPCHGen {
 
@@ -23,7 +21,7 @@ class SupplierSetterChain;
 // base record type
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
-class BaseSupplier: public Record
+class BaseSupplier: public Myriad::AbstractRecord
 {
 public:
 
@@ -42,6 +40,7 @@ public:
     const I64u& suppKey() const;
 
     virtual const String name() const = 0;
+
     void address(const vector<Char>& v);
     const vector<Char>& address() const;
 
@@ -58,6 +57,7 @@ public:
     const I16u& phoneLocalNumber3() const;
 
     virtual const String phone() const = 0;
+
     void acctBal(const Decimal& v);
     const Decimal& acctBal() const;
 
@@ -189,17 +189,17 @@ inline void AbstractOutputCollector<TPCHGen::BaseSupplier>::serialize(std::ostre
 {
     write(out, record.suppKey(), false);
     out << '|';
-    write(out, record.name(), true);
+    write(out, record.name(), false);
     out << '|';
-    write(out, record.address(), true);
+    write(out, record.address(), false);
     out << '|';
     write(out, record.nationKey(), false);
     out << '|';
-    write(out, record.phone(), true);
+    write(out, record.phone(), false);
     out << '|';
     write(out, record.acctBal(), false);
     out << '|';
-    write(out, record.comment(), true);
+    write(out, record.comment(), false);
     out << '|';
     out << '\n';
 }

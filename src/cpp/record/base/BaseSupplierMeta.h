@@ -3,20 +3,18 @@
 #ifndef BASESUPPLIERMETA_H_
 #define BASESUPPLIERMETA_H_
 
-#include "record/Record.h"
-
-using namespace Myriad;
+#include "record/AbstractRecord.h"
 
 namespace TPCHGen {
 
 // forward declarations
 class Supplier;
 
-class BaseSupplierMeta : public RecordMeta<Supplier>
+class BaseSupplierMeta : public Myriad::RecordMeta<Supplier>
 {
 public:
 
-    BaseSupplierMeta(const EnumSetPool& enumSets)
+    BaseSupplierMeta(const Myriad::EnumSetPool& enumSets)
     {
     }
 

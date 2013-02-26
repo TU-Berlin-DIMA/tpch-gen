@@ -3,8 +3,6 @@
 
 #include "runtime/setter/base/BaseSupplierSetterChain.h"
 
-using namespace Myriad;
-
 namespace TPCHGen {
 
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -15,7 +13,7 @@ class SupplierSetterChain : public BaseSupplierSetterChain
 {
 public:
 
-    SupplierSetterChain(OperationMode& opMode, RandomStream& random, GeneratorConfig& config) :
+    SupplierSetterChain(Myriad::BaseSetterChain::OperationMode& opMode, Myriad::RandomStream& random, Myriad::GeneratorConfig& config) :
         BaseSupplierSetterChain(opMode, random, config)
     {
     }
