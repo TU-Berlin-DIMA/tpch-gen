@@ -42,7 +42,24 @@ namespace Myriad {
 template<>
 inline void AbstractOutputCollector<TPCHGen::Customer>::serialize(std::ostream& out, const TPCHGen::Customer& record)
 {
-    AbstractOutputCollector<TPCHGen::BaseCustomer>::serialize(out, record);
+//  AbstractOutputCollector<TPCHGen::BaseCustomer>::serialize(out, record);
+    write(out, record.custKey(), false);
+    out << '|';
+    write(out, record.name(), false);
+    out << '|';
+    write(out, record.address(), false);
+    out << '|';
+    write(out, record.nationKey(), false);
+    out << '|';
+    write(out, record.phone(), false);
+    out << '|';
+    write(out, NumberFormatter::format(record.acctBal(), 2), false);
+    out << '|';
+    write(out, record.mktSegmentEnumValue(), false);
+    out << '|';
+    write(out, record.comment(), false);
+    out << '|';
+    out << '\n';
 }
 
 } // namespace Myriad

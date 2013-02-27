@@ -56,7 +56,7 @@ public:
         _setAvailQty(_valueProvider03),
         _valueProvider04(config.function< Myriad::UniformPrFunction<Decimal> >("Pr[part_supp.supply_cost]")),
         _setSupplyCost(_valueProvider04),
-        _valueProvider05("temporary placeholder for a random comment"),
+        _valueProvider05("temporary placeholder for a random comment + some random text, 75 chars..."),
         _setComment(_valueProvider05),
         _logger(Logger::get("part_supp.setter.chain"))
     {

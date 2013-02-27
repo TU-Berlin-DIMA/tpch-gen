@@ -5,6 +5,8 @@
 #include "generator/PartGenerator.h"
 #include "generator/PartSuppGenerator.h"
 #include "generator/CustomerGenerator.h"
+#include "generator/OrderGenerator.h"
+#include "generator/LineitemGenerator.h"
 #include "generator/NationGenerator.h"
 #include "generator/RegionGenerator.h"
 
@@ -25,6 +27,8 @@ AbstractSequenceGenerator::StageList initList()
     tmp.push_back(AbstractSequenceGenerator::Stage("part"));
     tmp.push_back(AbstractSequenceGenerator::Stage("part_supp"));
     tmp.push_back(AbstractSequenceGenerator::Stage("customer"));
+    tmp.push_back(AbstractSequenceGenerator::Stage("order"));
+    tmp.push_back(AbstractSequenceGenerator::Stage("lineitem"));
     tmp.push_back(AbstractSequenceGenerator::Stage("nation"));
     tmp.push_back(AbstractSequenceGenerator::Stage("region"));
 
@@ -40,6 +44,8 @@ void BaseGeneratorSubsystem::registerGenerators()
     registerGenerator<TPCHGen::PartGenerator>("part");
     registerGenerator<TPCHGen::PartSuppGenerator>("part_supp");
     registerGenerator<TPCHGen::CustomerGenerator>("customer");
+    registerGenerator<TPCHGen::OrderGenerator>("order");
+    registerGenerator<TPCHGen::LineitemGenerator>("lineitem");
     registerGenerator<TPCHGen::NationGenerator>("nation");
     registerGenerator<TPCHGen::RegionGenerator>("region");
 }

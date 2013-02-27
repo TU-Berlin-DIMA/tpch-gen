@@ -1,0 +1,8 @@
+@numberofvalues = 7
+0 ...... "REG AIR"
+1 ...... "AIR"
+2 ...... "RAIL"
+3 ...... "SHIP"
+4 ...... "TRUCK"
+5 ...... "MAIL"
+6 ...... "FOB"

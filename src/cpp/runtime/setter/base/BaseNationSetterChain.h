@@ -54,7 +54,7 @@ public:
         _rangeProvider03(0, config.parameter<Enum>("nation.sequence.cardinality")),
         _valueProvider03(config.function< Myriad::UniformPrFunction<I64u> >("Pr[nation.nation_key]"), _rangeProvider03),
         _setRegionKey(_valueProvider03),
-        _valueProvider04("temporary placeholder for a random comment"),
+        _valueProvider04("temp. p-holder."),
         _setComment(_valueProvider04),
         _logger(Logger::get("nation.setter.chain"))
     {

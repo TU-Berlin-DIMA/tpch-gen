@@ -76,7 +76,7 @@ public:
         _setSize(_valueProvider08),
         _valueProvider09(config.function< Myriad::UniformPrFunction<Enum> >("Pr[part.container]")),
         _setContainer(_valueProvider09),
-        _valueProvider10("temporary placeholder for a random comment"),
+        _valueProvider10("pholder!"),
         _setComment(_valueProvider10),
         _logger(Logger::get("part.setter.chain"))
     {

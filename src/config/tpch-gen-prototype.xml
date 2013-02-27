@@ -3,17 +3,34 @@
 
   <!-- configurable parameters -->
   <parameters>
-    <!-- naming convention {generator_name}.{parameter_name} -->
+    <!-- common.* -->
+    <parameter key='common.startdate'>1992-01-01</parameter>
+    <parameter key='common.currentdate'>1995-06-17</parameter>
+    <parameter key='common.enddate'>1998-12-31</parameter>
+    <!-- supplier.* -->
     <parameter key='supplier.sequence.base_cardinality'>10000</parameter>
     <parameter key='supplier.output-file'>supplier.tbl</parameter>
+    <!-- part.* -->
     <parameter key='part.sequence.base_cardinality'>200000</parameter>
     <parameter key='part.output-file'>part.tbl</parameter>
+    <!-- part_supp.* -->
     <parameter key='part_supp.sequence.base_cardinality'>800000</parameter>
     <parameter key='part_supp.output-file'>partsupp.tbl</parameter>
+    <!-- customer.* -->
     <parameter key='customer.sequence.base_cardinality'>150000</parameter>
     <parameter key='customer.output-file'>customer.tbl</parameter>
+    <parameter key='customer.order-mortality'>3</parameter>
+    <!-- order.* -->
+    <parameter key='order.sequence.base_cardinality'>1500000</parameter>
+    <parameter key='order.output-file'>orders.tbl</parameter>
+    <!-- lineitem.* -->
+    <parameter key='lineitem.sequence.max_lineitems_per_order'>7</parameter>
+    <parameter key='lineitem.sequence.base_cardinality'>10500000</parameter> <!-- %lineitem.sequence.max_lineitems_per_order% * %order.sequence.base_cardinality% -->
+    <parameter key='lineitem.output-file'>lineitem.tbl</parameter>
+    <!-- nation.* -->
     <parameter key='nation.sequence.cardinality'>25</parameter>
     <parameter key='nation.output-file'>nation.tbl</parameter>
+    <!-- region.* -->
     <parameter key='region.sequence.cardinality'>5</parameter>
     <parameter key='region.output-file'>region.tbl</parameter>
   </parameters>
@@ -26,7 +43,7 @@
       <argument key='x_max' type='I16u' value='41' />
     </function>
     <function key='Pr[common.address_char]' type='combined_probability[Char]'>
-      <argument key='path' type='String' value='${%ENV.config-dir% + "/distributions/address_char.distribution"}' />
+      <argument key='path' type='String' value='${%ENV.config-dir% + "/distributions/common/address_char.distribution"}' />
     </function>
     <function key='Pr[common.phone_component]' type='uniform_probability[I16u]'>
       <argument key='x_min' type='I16u' value='100' />
@@ -41,7 +58,6 @@
       <argument key='x_min' type='I16u' value='-999.99' />
       <argument key='x_max' type='I16u' value='9999.999' />
     </function>
-    
     <!-- Pr[part.*] -->
     <function key='Pr[part.part_key]' type='uniform_probability[I64u]'>
       <argument key='x_min' type='I64u' value='1' />
@@ -67,7 +83,6 @@
       <argument key='x_min' type='Enum' value='0' />
       <argument key='x_max' type='Enum' value='40' />
     </function>
-    
     <!-- Pr[part_supp.*] -->
     <function key='Pr[part_supp.avail_qty]' type='uniform_probability[I16u]'>
       <argument key='x_min' type='Enum' value='1' />
@@ -77,7 +92,6 @@
       <argument key='x_min' type='Enum' value='0' />
       <argument key='x_max' type='Enum' value='1000' />
     </function>
-    
     <!-- Pr[customer.*] -->
     <function key='Pr[customer.cust_key]' type='uniform_probability[I64u]'>
       <argument key='x_min' type='I64u' value='1' />
@@ -87,13 +101,71 @@
       <argument key='x_min' type='Enum' value='0' />
       <argument key='x_max' type='Enum' value='5' />
     </function>
-    
+    <!-- Pr[order.*] -->
+    <function key='Pr[order.date]' type='uniform_probability[Date]'>
+      <argument key='x_min' type='Date' value='%common.startdate%' />
+      <argument key='x_max' type='Date' value='${%common.enddate% - 150}' />
+    </function>
+    <function key='Pr[order.priority]' type='uniform_probability[Enum]'>
+      <argument key='x_min' type='Enum' value='0' />
+      <argument key='x_max' type='Enum' value='5' />
+    </function>
+    <function key='Pr[order.clerk_key]' type='uniform_probability[Enum]'>
+      <argument key='x_min' type='Enum' value='0' />
+      <argument key='x_max' type='Enum' value='${%supplier.sequence.cardinality% / 10 + 1}' />
+    </function>
+    <function key='Pr[order.lineitems_count]' type='uniform_probability[I32u]'>
+      <argument key='x_min' type='I32u' value='1' />
+      <argument key='x_max' type='I32u' value='${%lineitem.sequence.max_lineitems_per_order% + 1}' />
+    </function>
+    <!-- Pr[lineitem.*] -->
+    <function key='Pr[lineitem.part_supp_gen_id]' type='uniform_probability[I64u]'>
+      <argument key='x_min' type='I64u' value='0' />
+      <argument key='x_max' type='I64u' value='%part_supp.sequence.cardinality%' />
+    </function>
+    <function key='Pr[lineitem.quantity]' type='uniform_probability[I16u]'>
+      <argument key='x_min' type='I16u' value='1' />
+      <argument key='x_max' type='I16u' value='51' />
+    </function>
+    <function key='Pr[lineitem.discount]' type='uniform_probability[Decimal]'>
+      <argument key='x_min' type='Decimal' value='0.00' />
+      <argument key='x_max' type='Decimal' value='0.10' />
+    </function>
+    <function key='Pr[lineitem.tax]' type='uniform_probability[Decimal]'>
+      <argument key='x_min' type='Decimal' value='0.00' />
+      <argument key='x_max' type='Decimal' value='0.08' />
+    </function>
+    <function key='Pr[lineitem.ship_date_offset]' type='uniform_probability[I16u]'>
+      <argument key='x_min' type='I16u' value='1' />
+      <argument key='x_max' type='I16u' value='122' />
+    </function>
+    <function key='Pr[lineitem.commit_date_offset]' type='uniform_probability[I16u]'>
+      <argument key='x_min' type='I16u' value='30' />
+      <argument key='x_max' type='I16u' value='91' />
+    </function>
+    <function key='Pr[lineitem.receipt_date_offset]' type='uniform_probability[I16u]'>
+      <argument key='x_min' type='I16u' value='1' />
+      <argument key='x_max' type='I16u' value='31' />
+    </function>
+    <function key='Pr[lineitem.return_flag]' type='conditional_combined_probability[Char;Date]'>
+      <argument key='path' type='String' value='${%ENV.config-dir% + "/distributions/lineitem/return_flag.distribution"}' />
+    </function>
+    <function key='Pr[lineitem.line_status]' type='conditional_combined_probability[Char;Date]'>
+      <argument key='path' type='String' value='${%ENV.config-dir% + "/distributions/lineitem/line_status.distribution"}' />
+    </function>
+    <function key='Pr[lineitem.ship_instruct]' type='uniform_probability[Enum]'>
+      <argument key='x_min' type='Enum' value='0' />
+      <argument key='x_max' type='Enum' value='4' />
+    </function>
+    <function key='Pr[lineitem.ship_mode]' type='uniform_probability[Enum]'>
+      <argument key='x_min' type='Enum' value='0' />
+      <argument key='x_max' type='Enum' value='7' />
+    </function>
     <!-- Pr[nation.*] -->
     <function key='Pr[nation.nation_key]' type='uniform_probability[I64u]'>
       <argument key='x_min' type='I64u' value='0' />
       <argument key='x_max' type='I64u' value='%nation.sequence.cardinality%' />
     </function>
-    
     <!-- Pr[region.*] -->
     <function key='Pr[region.region_key]' type='uniform_probability[I64u]'>
       <argument key='x_min' type='I64u' value='0' />
@@ -113,12 +185,24 @@
     <enum_set key='part.container'>
       <argument key='path' type='String' value='${%ENV.config-dir% + "/domains/part/container.domain"}' />
     </enum_set>
-    
     <!-- customer.* -->
     <enum_set key='customer.mkt_segment'>
       <argument key='path' type='String' value='${%ENV.config-dir% + "/domains/customer/mkt_segment.domain"}' />
     </enum_set>
-    
+    <!-- order.* -->
+    <enum_set key='order.status'>
+      <argument key='path' type='String' value='${%ENV.config-dir% + "/domains/order/status.domain"}' />
+    </enum_set>
+    <enum_set key='order.priority'>
+      <argument key='path' type='String' value='${%ENV.config-dir% + "/domains/order/priority.domain"}' />
+    </enum_set>
+    <!-- lineitem.* -->
+    <enum_set key='lineitem.ship_instruction'>
+      <argument key='path' type='String' value='${%ENV.config-dir% + "/domains/lineitem/ship_instruction.domain"}' />
+    </enum_set>
+    <enum_set key='lineitem.ship_mode'>
+      <argument key='path' type='String' value='${%ENV.config-dir% + "/domains/lineitem/ship_mode.domain"}' />
+    </enum_set>
     <!-- nation.* -->
     <enum_set key='nation.name'>
       <argument key='path' type='String' value='${%ENV.config-dir% + "/domains/nation/name.domain"}' />
@@ -126,7 +210,6 @@
     <enum_set key='nation.region_key'>
       <argument key='path' type='String' value='${%ENV.config-dir% + "/domains/nation/region_key.domain"}' />
     </enum_set>
-    
     <!-- region.* -->
     <enum_set key='region.name'>
       <argument key='path' type='String' value='${%ENV.config-dir% + "/domains/region/name.domain"}' />
@@ -169,42 +252,42 @@
         </setter>
         <setter key='set_address' type='field_setter'>
           <argument key='field' type='field_ref' ref='supplier:address' />
-          <argument key='value' type='element_wise_value_provider'>
-            <argument key='element_length_value_provider' type='random_value_provider'>
+          <argument key='value' type='element_wise_value_provider[Char]'>
+            <argument key='element_length_value_provider' type='random_value_provider[I16u]'>
               <argument key='probability' type='function_ref' ref='Pr[common.address_length]' />
             </argument>
-            <argument key='element_value_provider' type='random_value_provider'>
+            <argument key='element_value_provider' type='random_value_provider[Char]'>
               <argument key='probability' type='function_ref' ref='Pr[common.address_char]' />
             </argument>
           </argument>
         </setter>
         <setter key='set_nation_key' type='field_setter'>
           <argument key='field' type='field_ref' ref='supplier:nation_key' />
-          <argument key='value' type='random_value_provider'>
+          <argument key='value' type='random_value_provider[I64u]'>
             <argument key='probability' type='function_ref' ref='Pr[nation.nation_key]' />
           </argument>
         </setter>
         <setter key='set_phone_components' type='field_setter'>
           <argument key='field' type='field_ref' ref='supplier:phone_components' />
-          <argument key='value' type='element_wise_value_provider'>
+          <argument key='value' type='element_wise_value_provider[I16u]'>
             <argument key='element_length_value_provider' type='const_value_provider[I16u]'>
               <argument key='value' type='I16u' value='3' />
             </argument>
-            <argument key='element_value_provider' type='random_value_provider'>
+            <argument key='element_value_provider' type='random_value_provider[I16u]'>
               <argument key='probability' type='function_ref' ref='Pr[common.phone_component]' />
             </argument>
           </argument>
         </setter>
         <setter key='set_acct_bal' type='field_setter'>
           <argument key='field' type='field_ref' ref='supplier:acct_bal' />
-          <argument key='value' type='random_value_provider'>
+          <argument key='value' type='random_value_provider[Decimal]'>
             <argument key='probability' type='function_ref' ref='Pr[supplier.acct_bal]' />
           </argument>
         </setter>
         <setter key='set_comment' type='field_setter'> <!-- @FIXME: generate according to specification -->
           <argument key='field' type='field_ref' ref='supplier:comment' />
           <argument key='value' type='const_value_provider[String]'>
-            <argument key='value' type='String' value='temporary placeholder for a random comment' />
+            <argument key='value' type='String' value='temporary placeholder for a random comment, and some more extra text to until 87 chars!' />
           </argument>
         </setter>
       </setter_chain>
@@ -213,7 +296,7 @@
       </cardinality_estimator>
       <sequence_iterator type='partitioned_iterator' />
     </random_sequence>
-    
+
     <random_sequence key='part'>
       <record_type>
         <field name='part_key' type='I64u' />
@@ -255,49 +338,49 @@
         </setter>
         <setter key='set_param_M' type='field_setter'>
           <argument key='field' type='field_ref' ref='part:param_M' />
-          <argument key='value' type='random_value_provider'>
+          <argument key='value' type='random_value_provider[I16u]'>
             <argument key='probability' type='function_ref' ref='Pr[part.param]' />
           </argument>
         </setter>
         <setter key='set_param_N' type='field_setter'>
           <argument key='field' type='field_ref' ref='part:param_N' />
-          <argument key='value' type='random_value_provider'>
+          <argument key='value' type='random_value_provider[I16u]'>
             <argument key='probability' type='function_ref' ref='Pr[part.param]' />
           </argument>
         </setter>
         <setter key='set_name_components' type='field_setter'>
           <argument key='field' type='field_ref' ref='part:name_components' />
-          <argument key='value' type='element_wise_value_provider'>
+          <argument key='value' type='element_wise_value_provider[Enum]'>
             <argument key='element_length_value_provider' type='const_value_provider[I16u]'>
               <argument key='value' type='I16u' value='5' />
             </argument>
-            <argument key='element_value_provider' type='random_value_provider'>
+            <argument key='element_value_provider' type='random_value_provider[Enum]'>
               <argument key='probability' type='function_ref' ref='Pr[part.name_component]' />
             </argument>
           </argument>
         </setter>
         <setter key='set_type' type='field_setter'>
           <argument key='field' type='field_ref' ref='part:type' />
-          <argument key='value' type='random_value_provider'>
+          <argument key='value' type='random_value_provider[Enum]'>
             <argument key='probability' type='function_ref' ref='Pr[part.type]' />
           </argument>
         </setter>
         <setter key='set_size' type='field_setter'>
           <argument key='field' type='field_ref' ref='part:size' />
-          <argument key='value' type='random_value_provider'>
+          <argument key='value' type='random_value_provider[I16u]'>
             <argument key='probability' type='function_ref' ref='Pr[part.size]' />
           </argument>
         </setter>
         <setter key='set_container' type='field_setter'>
           <argument key='field' type='field_ref' ref='part:container' />
-          <argument key='value' type='random_value_provider'>
+          <argument key='value' type='random_value_provider[Enum]'>
             <argument key='probability' type='function_ref' ref='Pr[part.container]' />
           </argument>
         </setter>
         <setter key='set_comment' type='field_setter'> <!-- @FIXME: generate according to specification -->
           <argument key='field' type='field_ref' ref='part:comment' />
           <argument key='value' type='const_value_provider[String]'>
-            <argument key='value' type='String' value='temporary placeholder for a random comment' />
+            <argument key='value' type='String' value='pholder!' />
           </argument>
         </setter>
       </setter_chain>
@@ -306,7 +389,7 @@
       </cardinality_estimator>
       <sequence_iterator type='partitioned_iterator' />
     </random_sequence>
-    
+
     <random_sequence key='part_supp'>
       <record_type>
         <field name='part_key' type='I64u' />
@@ -344,20 +427,20 @@
         </setter>
         <setter key='set_avail_qty' type='field_setter'>
           <argument key='field' type='field_ref' ref='part_supp:avail_qty' />
-          <argument key='value' type='random_value_provider'>
+          <argument key='value' type='random_value_provider[I16u]'>
             <argument key='probability' type='function_ref' ref='Pr[part_supp.avail_qty]' />
           </argument>
         </setter>
         <setter key='set_supply_cost' type='field_setter'>
           <argument key='field' type='field_ref' ref='part_supp:supply_cost' />
-          <argument key='value' type='random_value_provider'>
+          <argument key='value' type='random_value_provider[Decimal]'>
             <argument key='probability' type='function_ref' ref='Pr[part_supp.supply_cost]' />
           </argument>
         </setter>
         <setter key='set_comment' type='field_setter'> <!-- @FIXME: generate according to specification -->
           <argument key='field' type='field_ref' ref='part_supp:comment' />
           <argument key='value' type='const_value_provider[String]'>
-            <argument key='value' type='String' value='temporary placeholder for a random comment' />
+            <argument key='value' type='String' value='temporary placeholder for a random comment + some random text, 75 chars...' />
           </argument>
         </setter>
       </setter_chain>
@@ -366,7 +449,7 @@
       </cardinality_estimator>
       <sequence_iterator type='partitioned_iterator' />
     </random_sequence>
-    
+
     <random_sequence key='customer'>
       <record_type>
         <field name='cust_key' type='I64u' />
@@ -404,48 +487,48 @@
         </setter>
         <setter key='set_address' type='field_setter'>
           <argument key='field' type='field_ref' ref='customer:address' />
-          <argument key='value' type='element_wise_value_provider'>
-            <argument key='element_length_value_provider' type='random_value_provider'>
+          <argument key='value' type='element_wise_value_provider[Char]'>
+            <argument key='element_length_value_provider' type='random_value_provider[I16u]'>
               <argument key='probability' type='function_ref' ref='Pr[common.address_length]' />
             </argument>
-            <argument key='element_value_provider' type='random_value_provider'>
+            <argument key='element_value_provider' type='random_value_provider[Char]'>
               <argument key='probability' type='function_ref' ref='Pr[common.address_char]' />
             </argument>
           </argument>
         </setter>
         <setter key='set_nation_key' type='field_setter'>
           <argument key='field' type='field_ref' ref='customer:nation_key' />
-          <argument key='value' type='random_value_provider'>
+          <argument key='value' type='random_value_provider[I64u]'>
             <argument key='probability' type='function_ref' ref='Pr[nation.nation_key]' />
           </argument>
         </setter>
         <setter key='set_phone_components' type='field_setter'>
           <argument key='field' type='field_ref' ref='customer:phone_components' />
-          <argument key='value' type='element_wise_value_provider'>
+          <argument key='value' type='element_wise_value_provider[I16u]'>
             <argument key='element_length_value_provider' type='const_value_provider[I16u]'>
               <argument key='value' type='I16u' value='3' />
             </argument>
-            <argument key='element_value_provider' type='random_value_provider'>
+            <argument key='element_value_provider' type='random_value_provider[I16u]'>
               <argument key='probability' type='function_ref' ref='Pr[common.phone_component]' />
             </argument>
           </argument>
         </setter>
         <setter key='set_acct_bal' type='field_setter'>
           <argument key='field' type='field_ref' ref='customer:acct_bal' />
-          <argument key='value' type='random_value_provider'>
+          <argument key='value' type='random_value_provider[Decimal]'>
             <argument key='probability' type='function_ref' ref='Pr[supplier.acct_bal]' />
           </argument>
         </setter>
         <setter key='set_mkt_segment' type='field_setter'>
           <argument key='field' type='field_ref' ref='customer:mkt_segment' />
-          <argument key='value' type='random_value_provider'>
+          <argument key='value' type='random_value_provider[Enum]'>
             <argument key='probability' type='function_ref' ref='Pr[customer.mkt_segment]' />
           </argument>
         </setter>
         <setter key='set_comment' type='field_setter'> <!-- @FIXME: generate according to specification -->
           <argument key='field' type='field_ref' ref='customer:comment' />
           <argument key='value' type='const_value_provider[String]'>
-            <argument key='value' type='String' value='temporary placeholder for a random comment' />
+            <argument key='value' type='String' value='temporary placeholder for a random commentxx' />
           </argument>
         </setter>
       </setter_chain>
@@ -454,7 +537,281 @@
       </cardinality_estimator>
       <sequence_iterator type='partitioned_iterator' />
     </random_sequence>
-    
+
+    <random_sequence key='order'>
+      <record_type>
+        <field name='order_key' type='I64u' />
+        <field name='cust_key' type='I64u' />
+        <field name='order_status' type='Enum' enumref='order.status' />
+        <field name='total_price' type='Decimal' />
+        <field name='order_date' type='Date' />
+        <field name='order_priority' type='Enum' enumref='order.priority' />
+        <field name='clerk_key' type='I64u' />
+        <field name='clerk' type='String' derived='true' />
+        <field name='ship_priority' type='I16u' />
+        <field name='comment' type='String' />
+        <field name='lineitems_count' type='I32u' />
+      </record_type>
+      <output_format type='csv'>
+        <argument key='quoted' type='Bool' value='false' />
+        <argument key='delimiter' type='Char' value='|' />
+        <argument key='field' type='field_ref' ref='order:order_key' />
+        <argument key='field' type='field_ref' ref='order:cust_key' />
+        <argument key='field' type='field_ref' ref='order:order_status' />
+        <argument key='field' type='field_ref' ref='order:total_price' />
+        <argument key='field' type='field_ref' ref='order:order_date' />
+        <argument key='field' type='field_ref' ref='order:order_priority' />
+        <argument key='field' type='field_ref' ref='order:clerk' />
+        <argument key='field' type='field_ref' ref='order:ship_priority' />
+        <argument key='field' type='field_ref' ref='order:comment' />
+      </output_format>
+      <setter_chain>
+        <setter key='set_order_key' type='field_setter'>
+          <argument key='field' type='field_ref' ref='order:order_key' />
+          <argument key='value' type='callback_value_provider[I64u]'>
+            <argument key='name' type='String' value='setOrderKey' />
+            <argument key='arity' type='I16u' value='0' />
+          </argument>
+        </setter>
+        <setter key='set_cust_key' type='field_setter'>
+          <argument key='field' type='field_ref' ref='order:cust_key' />
+          <argument key='value' type='callback_value_provider[I64u]'>
+            <argument key='name' type='String' value='setCustKey' />
+            <argument key='arity' type='I16u' value='1' />
+          </argument>
+        </setter>
+        <setter key='set_order_status' type='field_setter'> <!-- @FIXME: generate according to specification -->
+          <argument key='field' type='field_ref' ref='order:order_status' />
+          <argument key='value' type='const_value_provider[Enum]'>
+            <argument key='value' type='Enum' value='0' />
+          </argument>
+        </setter>
+        <setter key='set_total_price' type='field_setter'> <!-- @FIXME: generate according to specification -->
+          <argument key='field' type='field_ref' ref='order:total_price' />
+          <argument key='value' type='const_value_provider[Decimal]'>
+            <argument key='value' type='Decimal' value='42.99' />
+          </argument>
+        </setter>
+        <setter key='set_order_date' type='field_setter'>
+          <argument key='field' type='field_ref' ref='order:order_date' />
+          <argument key='value' type='random_value_provider[Date]'>
+            <argument key='probability' type='function_ref' ref='Pr[order.date]' />
+          </argument>
+        </setter>
+        <setter key='set_order_priority' type='field_setter'>
+          <argument key='field' type='field_ref' ref='order:order_priority' />
+          <argument key='value' type='random_value_provider[Enum]'>
+            <argument key='probability' type='function_ref' ref='Pr[order.priority]' />
+          </argument>
+        </setter>
+        <setter key='set_clerk_key' type='field_setter'>
+          <argument key='field' type='field_ref' ref='order:clerk_key' />
+          <argument key='value' type='random_value_provider[I64u]'>
+            <argument key='probability' type='function_ref' ref='Pr[order.clerk_key]' />
+          </argument>
+        </setter>
+        <setter key='set_ship_priority' type='field_setter'>
+          <argument key='field' type='field_ref' ref='order:ship_priority' />
+          <argument key='value' type='const_value_provider[I16u]'>
+            <argument key='value' type='I16u' value='0' />
+          </argument>
+        </setter>
+        <setter key='set_comment' type='field_setter'> <!-- @FIXME: generate according to specification -->
+          <argument key='field' type='field_ref' ref='order:comment' />
+          <argument key='value' type='const_value_provider[String]'>
+            <argument key='value' type='String' value='pholder for a random comment' />
+          </argument>
+        </setter>
+        <setter key='set_lineitems_count' type='field_setter'>
+          <argument key='field' type='field_ref' ref='order:lineitems_count' />
+          <argument key='value' type='random_value_provider[I32u]'>
+            <argument key='probability' type='function_ref' ref='Pr[order.lineitems_count]' />
+          </argument>
+        </setter>
+      </setter_chain>
+      <cardinality_estimator type='linear_scale_estimator'>
+        <argument key='base_cardinality' type='I64u' value='%order.sequence.base_cardinality%' />
+      </cardinality_estimator>
+      <sequence_iterator type='partitioned_iterator' />
+    </random_sequence>
+
+    <random_sequence key='lineitem'>
+      <record_type>
+        <field name='order_key' type='I64u' />
+        <field name='part_key' type='I64u' />
+        <field name='supp_key' type='I64u' />
+        <field name='line_number' type='I16u' />
+        <field name='quantity' type='I16u' />
+        <field name='extended_price' type='Decimal' derived='true' />
+        <field name='discount' type='Decimal' />
+        <field name='tax' type='Decimal' />
+        <field name='ship_date_offset' type='I16u' />
+        <field name='ship_date' type='Date' derived='true' />
+        <field name='commit_date_offset' type='I16u' />
+        <field name='commit_date' type='Date' derived='true' />
+        <field name='receipt_date_offset' type='I16u' />
+        <field name='receipt_date' type='Date' derived='true' />
+        <field name='return_flag' type='Char' />
+        <field name='line_status' type='Char' />
+        <field name='ship_instruct' type='Enum' enumref='lineitem.ship_instruction' />
+        <field name='ship_mode' type='Enum' enumref='lineitem.ship_mode' />
+        <field name='comment' type='String' />
+        <reference name="order" type="order" />
+        <reference name="part_supp" type="part_supp" />
+        <reference name="part" type="part" />
+      </record_type>
+      <output_format type='csv'>
+        <argument key='quoted' type='Bool' value='false' />
+        <argument key='delimiter' type='Char' value='|' />
+        <argument key='field' type='field_ref' ref='lineitem:order_key' />
+        <argument key='field' type='field_ref' ref='lineitem:part_key' />
+        <argument key='field' type='field_ref' ref='lineitem:supp_key' />
+        <argument key='field' type='field_ref' ref='lineitem:line_number' />
+        <argument key='field' type='field_ref' ref='lineitem:quantity' />
+        <argument key='field' type='field_ref' ref='lineitem:extended_price' />
+        <argument key='field' type='field_ref' ref='lineitem:discount' />
+        <argument key='field' type='field_ref' ref='lineitem:tax' />
+        <argument key='field' type='field_ref' ref='lineitem:return_flag' />
+        <argument key='field' type='field_ref' ref='lineitem:line_status' />
+        <argument key='field' type='field_ref' ref='lineitem:ship_date' />
+        <argument key='field' type='field_ref' ref='lineitem:commit_date' />
+        <argument key='field' type='field_ref' ref='lineitem:receipt_date' />
+        <argument key='field' type='field_ref' ref='lineitem:ship_instruct' />
+        <argument key='field' type='field_ref' ref='lineitem:ship_mode' />
+        <argument key='field' type='field_ref' ref='lineitem:comment' />
+      </output_format>
+      <setter_chain>
+        <setter key='set_order' type='reference_setter'>
+          <argument key='reference' type='reference_ref' ref='lineitem:order' />
+          <argument key='value' type='clustered_reference_provider'>
+            <argument key='children_count' type='context_field_value_provider[I32u]'>
+              <argument key='field' type='field_ref' ref='order:lineitems_count' />
+            </argument>
+            <argument key='children_count_max' type='const_value_provider[I32u]'>
+              <argument key='value' type='I32u' value='%lineitem.sequence.max_lineitems_per_order%' />
+            </argument>
+            <argument key='position_field' type='field_ref' ref='lineitem:line_number' />
+          </argument>
+        </setter>
+        <setter key='set_part_supp' type='reference_setter'>
+          <argument key='reference' type='reference_ref' ref='lineitem:part_supp' />
+          <argument key='value' type='random_reference_provider'>
+            <argument key='predicate' type='equality_predicate_provider'>
+              <argument key='binder' type='predicate_value_binder'>
+                <argument key='field' type='field_ref' ref='part_supp:gen_id' />
+                <argument key='value' type='random_value_provider[I64u]'>
+                  <argument key='probability' type='function_ref' ref='Pr[lineitem.part_supp_gen_id]' />
+                </argument>
+              </argument>
+            </argument>
+          </argument>
+        </setter>
+        <setter key='set_part' type='reference_setter'>
+          <argument key='reference' type='reference_ref' ref='lineitem:part' />
+          <argument key='value' type='random_reference_provider'>
+            <argument key='predicate' type='equality_predicate_provider'>
+              <argument key='binder' type='predicate_value_binder'>
+                <argument key='field' type='field_ref' ref='part:part_key' />
+                <argument key='value' type='context_field_value_provider[I32u]'>
+                  <argument key='field' type='field_ref' ref='lineitem:part_supp:part_key' />
+                </argument>
+              </argument>
+            </argument>
+          </argument>
+        </setter>
+        <setter key='set_order_key' type='field_setter'>
+          <argument key='field' type='field_ref' ref='lineitem:order_key' />
+          <argument key='value' type='context_field_value_provider[I64u]'>
+            <argument key='field' type='field_ref' ref='lineitem:order:order_key' />
+          </argument>
+        </setter>
+        <setter key='set_part_key' type='field_setter'>
+          <argument key='field' type='field_ref' ref='lineitem:part_key' />
+          <argument key='value' type='context_field_value_provider[I64u]'>
+            <argument key='field' type='field_ref' ref='lineitem:part_supp:part_key' />
+          </argument>
+        </setter>
+        <setter key='set_supp_key' type='field_setter'>
+          <argument key='field' type='field_ref' ref='lineitem:supp_key' />
+          <argument key='value' type='context_field_value_provider[I64u]'>
+            <argument key='field' type='field_ref' ref='lineitem:part_supp:supp_key' />
+          </argument>
+        </setter>
+        <setter key='set_quantity' type='field_setter'>
+          <argument key='field' type='field_ref' ref='lineitem:quantity' />
+          <argument key='value' type='random_value_provider[I16u]'>
+            <argument key='probability' type='function_ref' ref='Pr[lineitem.quantity]' />
+          </argument>
+        </setter>
+        <setter key='set_discount' type='field_setter'>
+          <argument key='field' type='field_ref' ref='lineitem:discount' />
+          <argument key='value' type='random_value_provider[Decimal]'>
+            <argument key='probability' type='function_ref' ref='Pr[lineitem.discount]' />
+          </argument>
+        </setter>
+        <setter key='set_tax' type='field_setter'>
+          <argument key='field' type='field_ref' ref='lineitem:tax' />
+          <argument key='value' type='random_value_provider[Decimal]'>
+            <argument key='probability' type='function_ref' ref='Pr[lineitem.tax]' />
+          </argument>
+        </setter>
+        <setter key='set_ship_date_offset' type='field_setter'>
+          <argument key='field' type='field_ref' ref='lineitem:ship_date_offset' />
+          <argument key='value' type='random_value_provider[I16u]'>
+            <argument key='probability' type='function_ref' ref='Pr[lineitem.ship_date_offset]' />
+          </argument>
+        </setter>
+        <setter key='set_commit_date_offset' type='field_setter'>
+          <argument key='field' type='field_ref' ref='lineitem:commit_date_offset' />
+          <argument key='value' type='random_value_provider[I16u]'>
+            <argument key='probability' type='function_ref' ref='Pr[lineitem.commit_date_offset]' />
+          </argument>
+        </setter>
+        <setter key='set_receipt_date_offset' type='field_setter'>
+          <argument key='field' type='field_ref' ref='lineitem:receipt_date_offset' />
+          <argument key='value' type='random_value_provider[I16u]'>
+            <argument key='probability' type='function_ref' ref='Pr[lineitem.receipt_date_offset]' />
+          </argument>
+        </setter>
+        <setter key='set_return_flag' type='field_setter'>
+          <argument key='field' type='field_ref' ref='lineitem:return_flag' />
+          <argument key='value' type='random_value_provider[Char]'>
+            <argument key='condition_field' type='field_ref' ref='lineitem:receipt_date' />
+            <argument key='probability' type='function_ref' ref='Pr[lineitem.return_flag]' />
+          </argument>
+        </setter>
+        <setter key='set_line_status' type='field_setter'>
+          <argument key='field' type='field_ref' ref='lineitem:line_status' />
+          <argument key='value' type='random_value_provider[Char]'>
+            <argument key='condition_field' type='field_ref' ref='lineitem:ship_date' />
+            <argument key='probability' type='function_ref' ref='Pr[lineitem.line_status]' />
+          </argument>
+        </setter>
+        <setter key='set_ship_instruct' type='field_setter'>
+          <argument key='field' type='field_ref' ref='lineitem:ship_instruct' />
+          <argument key='value' type='random_value_provider[Enum]'>
+            <argument key='probability' type='function_ref' ref='Pr[lineitem.ship_instruct]' />
+          </argument>
+        </setter>
+        <setter key='set_ship_mode' type='field_setter'>
+          <argument key='field' type='field_ref' ref='lineitem:ship_mode' />
+          <argument key='value' type='random_value_provider[Enum]'>
+            <argument key='probability' type='function_ref' ref='Pr[lineitem.ship_mode]' />
+          </argument>
+        </setter>
+        <setter key='set_comment' type='field_setter'> <!-- @FIXME: generate according to specification -->
+          <argument key='field' type='field_ref' ref='lineitem:comment' />
+          <argument key='value' type='const_value_provider[String]'>
+            <argument key='value' type='String' value='comment pholder' />
+          </argument>
+        </setter>
+      </setter_chain>
+      <cardinality_estimator type='linear_scale_estimator'>
+        <argument key='base_cardinality' type='I64u' value='%lineitem.sequence.base_cardinality%' />
+      </cardinality_estimator>
+      <sequence_iterator type='partitioned_iterator' />
+    </random_sequence>
+
     <random_sequence key='nation'>
       <record_type>
         <field name='nation_key' type='I64u' />
@@ -504,7 +861,7 @@
         <setter key='set_comment' type='field_setter'> <!-- @FIXME: generate according to specification -->
           <argument key='field' type='field_ref' ref='nation:comment' />
           <argument key='value' type='const_value_provider[String]'>
-            <argument key='value' type='String' value='temporary placeholder for a random comment' />
+            <argument key='value' type='String' value='temp. p-holder.' />
           </argument>
         </setter>
       </setter_chain>
@@ -513,7 +870,7 @@
       </cardinality_estimator>
       <sequence_iterator type='partitioned_iterator' />
     </random_sequence>
-    
+
     <random_sequence key='region'>
       <record_type>
         <field name='region_key' type='I64u' />

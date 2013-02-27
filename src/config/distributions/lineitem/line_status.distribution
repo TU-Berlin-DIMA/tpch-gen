@@ -1,0 +1,15 @@
+@numberofconditions = 2
+
+# COND_VALUE <= CURRENTDATE
+@condition = [ 1992-01-01, 1995-06-18 )
+@numberofexactvals = 1
+@numberofbins = 0
+@nullprobability = 0.0
+p(X) = 1.0 for X = { 'F' }
+
+# COND_VALUE > CURRENTDATE
+@condition = [ 1995-06-18, 1999-01-01 )
+@numberofexactvals = 1
+@numberofbins = 0
+@nullprobability = 0.0
+p(X) = 0.5 for X = { '0' }

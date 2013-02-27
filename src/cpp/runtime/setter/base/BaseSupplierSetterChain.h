@@ -70,7 +70,7 @@ public:
         _setPhoneComponents(_valueProvider08),
         _valueProvider09(config.function< Myriad::UniformPrFunction<Decimal> >("Pr[supplier.acct_bal]")),
         _setAcctBal(_valueProvider09),
-        _valueProvider10("temporary placeholder for a random comment"),
+        _valueProvider10("temporary placeholder for a random comment, and some more extra text to until 87 chars!"),
         _setComment(_valueProvider10),
         _logger(Logger::get("supplier.setter.chain"))
     {

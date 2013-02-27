@@ -75,7 +75,7 @@ public:
         _setAcctBal(_valueProvider09),
         _valueProvider10(config.function< Myriad::UniformPrFunction<Enum> >("Pr[customer.mkt_segment]")),
         _setMktSegment(_valueProvider10),
-        _valueProvider11("temporary placeholder for a random comment"),
+        _valueProvider11("temporary placeholder for a random commentxx"),
         _setComment(_valueProvider11),
         _logger(Logger::get("customer.setter.chain"))
     {

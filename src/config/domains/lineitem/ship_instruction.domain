@@ -1,0 +1,5 @@
+@numberofvalues = 4
+0 ...... "DELIVER IN PERSON"
+1 ...... "COLLECT COD"
+2 ...... "NONE"
+3 ...... "TAKE BACK RETURN"
