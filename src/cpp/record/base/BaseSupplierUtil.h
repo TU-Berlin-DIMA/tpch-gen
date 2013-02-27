@@ -87,60 +87,22 @@ struct RecordFieldTraits<RecordTraits<TPCHGen::Supplier>::NATION_KEY, TPCHGen::S
     }
 };
 
-// phone_local_number1
+// phone_components
 template<>
-struct RecordFieldTraits<RecordTraits<TPCHGen::Supplier>::PHONE_LOCAL_NUMBER1, TPCHGen::Supplier>
+struct RecordFieldTraits<RecordTraits<TPCHGen::Supplier>::PHONE_COMPONENTS, TPCHGen::Supplier>
 {
-    typedef I16u FieldType;
+    typedef vector<I16u> FieldType;
     typedef MethodTraits<TPCHGen::Supplier, FieldType>::RefSetter FieldSetterType;
     typedef MethodTraits<TPCHGen::Supplier, FieldType>::RefGetter FieldGetterType;
 
     static inline FieldSetterType setter()
     {
-        return static_cast<FieldSetterType>(&TPCHGen::Supplier::phoneLocalNumber1);
+        return static_cast<FieldSetterType>(&TPCHGen::Supplier::phoneComponents);
     }
 
     static inline FieldGetterType getter()
     {
-        return static_cast<FieldGetterType>(&TPCHGen::Supplier::phoneLocalNumber1);
-    }
-};
-
-// phone_local_number2
-template<>
-struct RecordFieldTraits<RecordTraits<TPCHGen::Supplier>::PHONE_LOCAL_NUMBER2, TPCHGen::Supplier>
-{
-    typedef I16u FieldType;
-    typedef MethodTraits<TPCHGen::Supplier, FieldType>::RefSetter FieldSetterType;
-    typedef MethodTraits<TPCHGen::Supplier, FieldType>::RefGetter FieldGetterType;
-
-    static inline FieldSetterType setter()
-    {
-        return static_cast<FieldSetterType>(&TPCHGen::Supplier::phoneLocalNumber2);
-    }
-
-    static inline FieldGetterType getter()
-    {
-        return static_cast<FieldGetterType>(&TPCHGen::Supplier::phoneLocalNumber2);
-    }
-};
-
-// phone_local_number3
-template<>
-struct RecordFieldTraits<RecordTraits<TPCHGen::Supplier>::PHONE_LOCAL_NUMBER3, TPCHGen::Supplier>
-{
-    typedef I16u FieldType;
-    typedef MethodTraits<TPCHGen::Supplier, FieldType>::RefSetter FieldSetterType;
-    typedef MethodTraits<TPCHGen::Supplier, FieldType>::RefGetter FieldGetterType;
-
-    static inline FieldSetterType setter()
-    {
-        return static_cast<FieldSetterType>(&TPCHGen::Supplier::phoneLocalNumber3);
-    }
-
-    static inline FieldGetterType getter()
-    {
-        return static_cast<FieldGetterType>(&TPCHGen::Supplier::phoneLocalNumber3);
+        return static_cast<FieldGetterType>(&TPCHGen::Supplier::phoneComponents);
     }
 };
 

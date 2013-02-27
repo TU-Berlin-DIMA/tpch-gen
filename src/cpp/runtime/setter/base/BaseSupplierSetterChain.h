@@ -40,15 +40,11 @@ public:
     // runtime components for setter `set_nation_key`
     typedef Myriad::RandomValueProvider< I64u, Supplier, Myriad::UniformPrFunction<I64u>, 0 > ValueProvider05Type;
     typedef Myriad::FieldSetter< Supplier, Myriad::RecordTraits<Supplier>::NATION_KEY, ValueProvider05Type > SetNationKeyType;
-    // runtime components for setter `set_phone_local_number1`
+    // runtime components for setter `set_phone_components`
     typedef Myriad::RandomValueProvider< I16u, Supplier, Myriad::UniformPrFunction<I16u>, 0 > ValueProvider06Type;
-    typedef Myriad::FieldSetter< Supplier, Myriad::RecordTraits<Supplier>::PHONE_LOCAL_NUMBER1, ValueProvider06Type > SetPhoneLocalNumber1Type;
-    // runtime components for setter `set_phone_local_number2`
-    typedef Myriad::RandomValueProvider< I16u, Supplier, Myriad::UniformPrFunction<I16u>, 0 > ValueProvider07Type;
-    typedef Myriad::FieldSetter< Supplier, Myriad::RecordTraits<Supplier>::PHONE_LOCAL_NUMBER2, ValueProvider07Type > SetPhoneLocalNumber2Type;
-    // runtime components for setter `set_phone_local_number3`
-    typedef Myriad::RandomValueProvider< I16u, Supplier, Myriad::UniformPrFunction<I16u>, 0 > ValueProvider08Type;
-    typedef Myriad::FieldSetter< Supplier, Myriad::RecordTraits<Supplier>::PHONE_LOCAL_NUMBER3, ValueProvider08Type > SetPhoneLocalNumber3Type;
+    typedef Myriad::ConstValueProvider< I16u, Supplier > ValueProvider07Type;
+    typedef Myriad::ElementWiseValueProvider< I16u, Supplier, 3 > ValueProvider08Type;
+    typedef Myriad::FieldSetter< Supplier, Myriad::RecordTraits<Supplier>::PHONE_COMPONENTS, ValueProvider08Type > SetPhoneComponentsType;
     // runtime components for setter `set_acct_bal`
     typedef Myriad::RandomValueProvider< Decimal, Supplier, Myriad::UniformPrFunction<Decimal>, 0 > ValueProvider09Type;
     typedef Myriad::FieldSetter< Supplier, Myriad::RecordTraits<Supplier>::ACCT_BAL, ValueProvider09Type > SetAcctBalType;
@@ -62,18 +58,16 @@ public:
         _rangeProvider01(0, config.parameter<I64u>("supplier.sequence.cardinality")),
         _valueProvider01(config.function< Myriad::UniformPrFunction<I64u> >("Pr[supplier.supp_key]"), _rangeProvider01),
         _setSuppKey(_valueProvider01),
-        _valueProvider02(config.function< Myriad::CombinedPrFunction<Char> >("Pr[common.ascii_char]")),
-        _valueProvider03(config.function< Myriad::UniformPrFunction<I16u> >("Pr[supplier.address_length]")),
+        _valueProvider02(config.function< Myriad::CombinedPrFunction<Char> >("Pr[common.address_char]")),
+        _valueProvider03(config.function< Myriad::UniformPrFunction<I16u> >("Pr[common.address_length]")),
         _valueProvider04(_valueProvider02, _valueProvider03),
         _setAddress(_valueProvider04),
         _valueProvider05(config.function< Myriad::UniformPrFunction<I64u> >("Pr[supplier.nation_key]")),
         _setNationKey(_valueProvider05),
-        _valueProvider06(config.function< Myriad::UniformPrFunction<I16u> >("Pr[supplier.phone_local_number]")),
-        _setPhoneLocalNumber1(_valueProvider06),
-        _valueProvider07(config.function< Myriad::UniformPrFunction<I16u> >("Pr[supplier.phone_local_number]")),
-        _setPhoneLocalNumber2(_valueProvider07),
-        _valueProvider08(config.function< Myriad::UniformPrFunction<I16u> >("Pr[supplier.phone_local_number]")),
-        _setPhoneLocalNumber3(_valueProvider08),
+        _valueProvider06(config.function< Myriad::UniformPrFunction<I16u> >("Pr[common.phone_component]")),
+        _valueProvider07(3),
+        _valueProvider08(_valueProvider06, _valueProvider07),
+        _setPhoneComponents(_valueProvider08),
         _valueProvider09(config.function< Myriad::UniformPrFunction<Decimal> >("Pr[supplier.acct_bal]")),
         _setAcctBal(_valueProvider09),
         _valueProvider10("temporary placeholder for a random comment"),
@@ -99,9 +93,7 @@ public:
         me->_setSuppKey(recordPtr, me->_random);
         me->_setAddress(recordPtr, me->_random);
         me->_setNationKey(recordPtr, me->_random);
-        me->_setPhoneLocalNumber1(recordPtr, me->_random);
-        me->_setPhoneLocalNumber2(recordPtr, me->_random);
-        me->_setPhoneLocalNumber3(recordPtr, me->_random);
+        me->_setPhoneComponents(recordPtr, me->_random);
         me->_setAcctBal(recordPtr, me->_random);
         me->_setComment(recordPtr, me->_random);
     }
@@ -117,9 +109,7 @@ public:
         _setSuppKey.filterRange(predicate, result);
         _setAddress.filterRange(predicate, result);
         _setNationKey.filterRange(predicate, result);
-        _setPhoneLocalNumber1.filterRange(predicate, result);
-        _setPhoneLocalNumber2.filterRange(predicate, result);
-        _setPhoneLocalNumber3.filterRange(predicate, result);
+        _setPhoneComponents.filterRange(predicate, result);
         _setAcctBal.filterRange(predicate, result);
         _setComment.filterRange(predicate, result);
 
@@ -146,17 +136,11 @@ protected:
     ValueProvider05Type _valueProvider05;
     SetNationKeyType _setNationKey;
 
-    // runtime components for setter `set_phone_local_number1`
+    // runtime components for setter `set_phone_components`
     ValueProvider06Type _valueProvider06;
-    SetPhoneLocalNumber1Type _setPhoneLocalNumber1;
-
-    // runtime components for setter `set_phone_local_number2`
     ValueProvider07Type _valueProvider07;
-    SetPhoneLocalNumber2Type _setPhoneLocalNumber2;
-
-    // runtime components for setter `set_phone_local_number3`
     ValueProvider08Type _valueProvider08;
-    SetPhoneLocalNumber3Type _setPhoneLocalNumber3;
+    SetPhoneComponentsType _setPhoneComponents;
 
     // runtime components for setter `set_acct_bal`
     ValueProvider09Type _valueProvider09;

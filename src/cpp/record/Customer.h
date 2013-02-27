@@ -1,7 +1,7 @@
-#ifndef SUPPLIER_H_
-#define SUPPLIER_H_
+#ifndef CUSTOMER_H_
+#define CUSTOMER_H_
 
-#include "record/base/BaseSupplier.h"
+#include "record/base/BaseCustomer.h"
 
 namespace TPCHGen {
 
@@ -9,18 +9,18 @@ namespace TPCHGen {
 // record type
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
-class Supplier: public BaseSupplier
+class Customer: public BaseCustomer
 {
 public:
 
-    Supplier(const SupplierMeta& meta)
-        : BaseSupplier(meta)
+    Customer(const CustomerMeta& meta)
+        : BaseCustomer(meta)
     {
     }
 
     virtual const String name() const
     {
-        return format("Supplier#%09Lu", suppKey());
+        return format("Customer#%09Lu", custKey());
     }
 
     virtual const String phone() const
@@ -40,11 +40,11 @@ namespace Myriad {
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
 template<>
-inline void AbstractOutputCollector<TPCHGen::Supplier>::serialize(std::ostream& out, const TPCHGen::Supplier& record)
+inline void AbstractOutputCollector<TPCHGen::Customer>::serialize(std::ostream& out, const TPCHGen::Customer& record)
 {
-    AbstractOutputCollector<TPCHGen::BaseSupplier>::serialize(out, record);
+    AbstractOutputCollector<TPCHGen::BaseCustomer>::serialize(out, record);
 }
 
 } // namespace Myriad
 
-#endif /* SUPPLIER_H_ */
+#endif /* CUSTOMER_H_ */

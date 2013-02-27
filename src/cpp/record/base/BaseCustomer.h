@@ -1,10 +1,10 @@
-// auto-generatad C++ file for `supplier`
+// auto-generatad C++ file for `customer`
 
-#ifndef BASESUPPLIER_H_
-#define BASESUPPLIER_H_
+#ifndef BASECUSTOMER_H_
+#define BASECUSTOMER_H_
 
 #include "record/AbstractRecord.h"
-#include "record/SupplierMeta.h"
+#include "record/CustomerMeta.h"
 
 namespace TPCHGen {
 
@@ -12,41 +12,41 @@ namespace TPCHGen {
 // forward declarations
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
-class Supplier;
-class SupplierConfig;
-class SupplierGenerator;
-class SupplierSetterChain;
+class Customer;
+class CustomerConfig;
+class CustomerGenerator;
+class CustomerSetterChain;
 
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 // base record type
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
-class BaseSupplier: public Myriad::AbstractRecord
+class BaseCustomer: public Myriad::AbstractRecord
 {
 public:
 
-    BaseSupplier(const SupplierMeta& meta) : 
+    BaseCustomer(const CustomerMeta& meta) : 
         _address(40),
         _phone_components(3),
         _meta(meta)
     {
     }
 
-    const SupplierMeta& meta() const
+    const CustomerMeta& meta() const
     {
         return _meta;
     }
 
-    void suppKey(const I64u& v);
-    const I64u& suppKey() const;
+    void custKey(const I64u& v);
+    const I64u& custKey() const;
 
     virtual const String name() const = 0;
 
     void address(const vector<Char>& v);
     const vector<Char>& address() const;
 
-    void nationKey(const I16u& v);
-    const I16u& nationKey() const;
+    void nationKey(const I64u& v);
+    const I64u& nationKey() const;
 
     void phoneComponents(const vector<I16u>& v);
     const vector<I16u>& phoneComponents() const;
@@ -56,81 +56,101 @@ public:
     void acctBal(const Decimal& v);
     const Decimal& acctBal() const;
 
+    void mktSegment(const Enum& v);
+    const Enum& mktSegment() const;
+    const String& mktSegmentEnumValue() const;
+
     void comment(const String& v);
     const String& comment() const;
 
 protected:
 
     // fields
-    I64u _supp_key;
+    I64u _cust_key;
     vector<Char> _address;
-    I16u _nation_key;
+    I64u _nation_key;
     vector<I16u> _phone_components;
     Decimal _acct_bal;
+    Enum _mkt_segment;
     String _comment;
 
     // meta
-    const SupplierMeta& _meta;
+    const CustomerMeta& _meta;
 };
 
-inline void BaseSupplier::suppKey(const I64u& v)
+inline void BaseCustomer::custKey(const I64u& v)
 {
-    _supp_key = v;
+    _cust_key = v;
 }
 
-inline const I64u& BaseSupplier::suppKey() const
+inline const I64u& BaseCustomer::custKey() const
 {
-    return _supp_key;
+    return _cust_key;
 }
 
-inline void BaseSupplier::address(const vector<Char>& v)
+inline void BaseCustomer::address(const vector<Char>& v)
 {
     _address = v;
     _address.resize(v.size());
 }
 
-inline const vector<Char>& BaseSupplier::address() const
+inline const vector<Char>& BaseCustomer::address() const
 {
     return _address;
 }
 
-inline void BaseSupplier::nationKey(const I16u& v)
+inline void BaseCustomer::nationKey(const I64u& v)
 {
     _nation_key = v;
 }
 
-inline const I16u& BaseSupplier::nationKey() const
+inline const I64u& BaseCustomer::nationKey() const
 {
     return _nation_key;
 }
 
-inline void BaseSupplier::phoneComponents(const vector<I16u>& v)
+inline void BaseCustomer::phoneComponents(const vector<I16u>& v)
 {
     _phone_components = v;
     _phone_components.resize(v.size());
 }
 
-inline const vector<I16u>& BaseSupplier::phoneComponents() const
+inline const vector<I16u>& BaseCustomer::phoneComponents() const
 {
     return _phone_components;
 }
 
-inline void BaseSupplier::acctBal(const Decimal& v)
+inline void BaseCustomer::acctBal(const Decimal& v)
 {
     _acct_bal = v;
 }
 
-inline const Decimal& BaseSupplier::acctBal() const
+inline const Decimal& BaseCustomer::acctBal() const
 {
     return _acct_bal;
 }
 
-inline void BaseSupplier::comment(const String& v)
+inline void BaseCustomer::mktSegment(const Enum& v)
+{
+    _mkt_segment = v;
+}
+
+inline const Enum& BaseCustomer::mktSegment() const
+{
+    return _mkt_segment;
+}
+
+inline const String& BaseCustomer::mktSegmentEnumValue() const
+{
+    return _meta.mkt_segment[_mkt_segment];
+}
+
+inline void BaseCustomer::comment(const String& v)
 {
     _comment = v;
 }
 
-inline const String& BaseSupplier::comment() const
+inline const String& BaseCustomer::comment() const
 {
     return _comment;
 }
@@ -144,14 +164,14 @@ namespace Myriad {
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
 template<>
-struct RecordTraits<TPCHGen::Supplier>
+struct RecordTraits<TPCHGen::Customer>
 {
-    typedef TPCHGen::SupplierMeta MetaType;
-    typedef TPCHGen::SupplierGenerator GeneratorType;
-    typedef TPCHGen::SupplierSetterChain SetterChainType;
-    typedef RecordFactory<TPCHGen::Supplier> FactoryType;
+    typedef TPCHGen::CustomerMeta MetaType;
+    typedef TPCHGen::CustomerGenerator GeneratorType;
+    typedef TPCHGen::CustomerSetterChain SetterChainType;
+    typedef RecordFactory<TPCHGen::Customer> FactoryType;
 
-    enum Field { UNKNOWN, GEN_ID, SUPP_KEY, NAME, ADDRESS, NATION_KEY, PHONE_COMPONENTS, PHONE, ACCT_BAL, COMMENT };
+    enum Field { UNKNOWN, GEN_ID, CUST_KEY, NAME, ADDRESS, NATION_KEY, PHONE_COMPONENTS, PHONE, ACCT_BAL, MKT_SEGMENT, COMMENT };
 };
 
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -159,9 +179,9 @@ struct RecordTraits<TPCHGen::Supplier>
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
 template<>
-inline void AbstractOutputCollector<TPCHGen::BaseSupplier>::serialize(std::ostream& out, const TPCHGen::BaseSupplier& record)
+inline void AbstractOutputCollector<TPCHGen::BaseCustomer>::serialize(std::ostream& out, const TPCHGen::BaseCustomer& record)
 {
-    write(out, record.suppKey(), false);
+    write(out, record.custKey(), false);
     out << '|';
     write(out, record.name(), false);
     out << '|';
@@ -173,6 +193,8 @@ inline void AbstractOutputCollector<TPCHGen::BaseSupplier>::serialize(std::ostre
     out << '|';
     write(out, record.acctBal(), false);
     out << '|';
+    write(out, record.mktSegmentEnumValue(), false);
+    out << '|';
     write(out, record.comment(), false);
     out << '|';
     out << '\n';
@@ -180,4 +202,4 @@ inline void AbstractOutputCollector<TPCHGen::BaseSupplier>::serialize(std::ostre
 
 } // namespace Myriad
 
-#endif /* BASESUPPLIER_H_ */
+#endif /* BASECUSTOMER_H_ */

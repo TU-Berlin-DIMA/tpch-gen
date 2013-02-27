@@ -1,0 +1,6 @@
+@numberofvalues = 5
+0 ...... "AUTOMOBILE"
+1 ...... "BUILDING"
+2 ...... "FURNITURE"
+3 ...... "MACHINERY"
+4 ...... "HOUSEHOLD"
