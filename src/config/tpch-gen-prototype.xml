@@ -12,13 +12,15 @@
     <parameter key='part_supp.output-file'>partsupp.tbl</parameter>
     <parameter key='customer.sequence.base_cardinality'>150000</parameter>
     <parameter key='customer.output-file'>customer.tbl</parameter>
-    <parameter key='nation.sequence.cardinality'>26</parameter>
+    <parameter key='nation.sequence.cardinality'>25</parameter>
     <parameter key='nation.output-file'>nation.tbl</parameter>
+    <parameter key='region.sequence.cardinality'>5</parameter>
+    <parameter key='region.output-file'>region.tbl</parameter>
   </parameters>
 
   <!-- function configuration -->
   <functions>
-    <!-- example: Pr[common.*] -->
+    <!-- Pr[common.*] -->
     <function key='Pr[common.address_length]' type='uniform_probability[I16u]'>
       <argument key='x_min' type='I16u' value='10' />
       <argument key='x_max' type='I16u' value='41' />
@@ -30,20 +32,17 @@
       <argument key='x_min' type='I16u' value='100' />
       <argument key='x_max' type='I16u' value='1000' />
     </function>
-    <!-- example: Pr[supplier.*] -->
+    <!-- Pr[supplier.*] -->
     <function key='Pr[supplier.supp_key]' type='uniform_probability[I64u]'>
       <argument key='x_min' type='I64u' value='1' />
       <argument key='x_max' type='I64u' value='${%supplier.sequence.cardinality% + 1}' />
-    </function>
-    <function key='Pr[supplier.nation_key]' type='uniform_probability[I64u]'>
-      <argument key='x_min' type='I64u' value='0' />
-      <argument key='x_max' type='I64u' value='%nation.sequence.cardinality%' />
     </function>
     <function key='Pr[supplier.acct_bal]' type='uniform_probability[Decimal]'>
       <argument key='x_min' type='I16u' value='-999.99' />
       <argument key='x_max' type='I16u' value='9999.999' />
     </function>
-    <!-- example: Pr[part.*] -->
+    
+    <!-- Pr[part.*] -->
     <function key='Pr[part.part_key]' type='uniform_probability[I64u]'>
       <argument key='x_min' type='I64u' value='1' />
       <argument key='x_max' type='I64u' value='${%part.sequence.cardinality% + 1}' />
@@ -68,7 +67,8 @@
       <argument key='x_min' type='Enum' value='0' />
       <argument key='x_max' type='Enum' value='40' />
     </function>
-    <!-- example: Pr[part_supp.*] -->
+    
+    <!-- Pr[part_supp.*] -->
     <function key='Pr[part_supp.avail_qty]' type='uniform_probability[I16u]'>
       <argument key='x_min' type='Enum' value='1' />
       <argument key='x_max' type='Enum' value='10000' />
@@ -78,23 +78,32 @@
       <argument key='x_max' type='Enum' value='1000' />
     </function>
     
-    <!-- example: Pr[customer.*] -->
+    <!-- Pr[customer.*] -->
     <function key='Pr[customer.cust_key]' type='uniform_probability[I64u]'>
       <argument key='x_min' type='I64u' value='1' />
       <argument key='x_max' type='I64u' value='${%customer.sequence.cardinality% + 1}' />
-    </function>
-    <function key='Pr[customer.nation_key]' type='uniform_probability[I64u]'>
-      <argument key='x_min' type='I64u' value='0' />
-      <argument key='x_max' type='I64u' value='%nation.sequence.cardinality%' />
     </function>
     <function key='Pr[customer.mkt_segment]' type='uniform_probability[Enum]'>
       <argument key='x_min' type='Enum' value='0' />
       <argument key='x_max' type='Enum' value='5' />
     </function>
+    
+    <!-- Pr[nation.*] -->
+    <function key='Pr[nation.nation_key]' type='uniform_probability[I64u]'>
+      <argument key='x_min' type='I64u' value='0' />
+      <argument key='x_max' type='I64u' value='%nation.sequence.cardinality%' />
+    </function>
+    
+    <!-- Pr[region.*] -->
+    <function key='Pr[region.region_key]' type='uniform_probability[I64u]'>
+      <argument key='x_min' type='I64u' value='0' />
+      <argument key='x_max' type='I64u' value='%region.sequence.cardinality%' />
+    </function>
   </functions>
 
   <!-- enumeration types -->
   <enum_sets>
+    <!-- part.* -->
     <enum_set key='part.name_component'>
       <argument key='path' type='String' value='${%ENV.config-dir% + "/domains/part/name_component.domain"}' />
     </enum_set>
@@ -104,8 +113,23 @@
     <enum_set key='part.container'>
       <argument key='path' type='String' value='${%ENV.config-dir% + "/domains/part/container.domain"}' />
     </enum_set>
+    
+    <!-- customer.* -->
     <enum_set key='customer.mkt_segment'>
       <argument key='path' type='String' value='${%ENV.config-dir% + "/domains/customer/mkt_segment.domain"}' />
+    </enum_set>
+    
+    <!-- nation.* -->
+    <enum_set key='nation.name'>
+      <argument key='path' type='String' value='${%ENV.config-dir% + "/domains/nation/name.domain"}' />
+    </enum_set>
+    <enum_set key='nation.region_key'>
+      <argument key='path' type='String' value='${%ENV.config-dir% + "/domains/nation/region_key.domain"}' />
+    </enum_set>
+    
+    <!-- region.* -->
+    <enum_set key='region.name'>
+      <argument key='path' type='String' value='${%ENV.config-dir% + "/domains/region/name.domain"}' />
     </enum_set>
   </enum_sets>
 
@@ -157,7 +181,7 @@
         <setter key='set_nation_key' type='field_setter'>
           <argument key='field' type='field_ref' ref='supplier:nation_key' />
           <argument key='value' type='random_value_provider'>
-            <argument key='probability' type='function_ref' ref='Pr[supplier.nation_key]' />
+            <argument key='probability' type='function_ref' ref='Pr[nation.nation_key]' />
           </argument>
         </setter>
         <setter key='set_phone_components' type='field_setter'>
@@ -392,7 +416,7 @@
         <setter key='set_nation_key' type='field_setter'>
           <argument key='field' type='field_ref' ref='customer:nation_key' />
           <argument key='value' type='random_value_provider'>
-            <argument key='probability' type='function_ref' ref='Pr[customer.nation_key]' />
+            <argument key='probability' type='function_ref' ref='Pr[nation.nation_key]' />
           </argument>
         </setter>
         <setter key='set_phone_components' type='field_setter'>
@@ -427,6 +451,112 @@
       </setter_chain>
       <cardinality_estimator type='linear_scale_estimator'>
         <argument key='base_cardinality' type='I64u' value='%customer.sequence.base_cardinality%' />
+      </cardinality_estimator>
+      <sequence_iterator type='partitioned_iterator' />
+    </random_sequence>
+    
+    <random_sequence key='nation'>
+      <record_type>
+        <field name='nation_key' type='I64u' />
+        <field name='name' type='Enum' enumref='nation.name' />
+        <field name='region_key' type='Enum' enumref='nation.region_key' />
+        <field name='comment' type='String' />
+      </record_type>
+      <output_format type='csv'>
+        <argument key='quoted' type='Bool' value='false' />
+        <argument key='delimiter' type='Char' value='|' />
+        <argument key='field' type='field_ref' ref='nation:nation_key' />
+        <argument key='field' type='field_ref' ref='nation:name' />
+        <argument key='field' type='field_ref' ref='nation:region_key' />
+        <argument key='field' type='field_ref' ref='customer:comment' />
+      </output_format>
+      <setter_chain>
+        <setter key='set_nation_key' type='field_setter'>
+          <argument key='field' type='field_ref' ref='nation:nation_key' />
+          <argument key='value' type='clustered_value_provider[I64u]'>
+            <argument key='probability' type='function_ref' ref='Pr[nation.nation_key]' />
+            <argument key='cardinality' type='const_range_provider[I64u]'>
+              <argument key='min' type='I64u' value='0' />
+              <argument key='max' type='I64u' value='%nation.sequence.cardinality%' />
+            </argument>
+          </argument>
+        </setter>
+        <setter key='set_name' type='field_setter'>
+          <argument key='field' type='field_ref' ref='nation:name' />
+          <argument key='value' type='clustered_value_provider[Enum]'>
+            <argument key='probability' type='function_ref' ref='Pr[nation.nation_key]' />
+            <argument key='cardinality' type='const_range_provider[Enum]'>
+              <argument key='min' type='Enum' value='0' />
+              <argument key='max' type='Enum' value='%nation.sequence.cardinality%' />
+            </argument>
+          </argument>
+        </setter>
+        <setter key='set_region_key' type='field_setter'>
+          <argument key='field' type='field_ref' ref='nation:region_key' />
+          <argument key='value' type='clustered_value_provider[Enum]'>
+            <argument key='probability' type='function_ref' ref='Pr[nation.nation_key]' />
+            <argument key='cardinality' type='const_range_provider[Enum]'>
+              <argument key='min' type='Enum' value='0' />
+              <argument key='max' type='Enum' value='%nation.sequence.cardinality%' />
+            </argument>
+          </argument>
+        </setter>
+        <setter key='set_comment' type='field_setter'> <!-- @FIXME: generate according to specification -->
+          <argument key='field' type='field_ref' ref='nation:comment' />
+          <argument key='value' type='const_value_provider[String]'>
+            <argument key='value' type='String' value='temporary placeholder for a random comment' />
+          </argument>
+        </setter>
+      </setter_chain>
+      <cardinality_estimator type='const_estimator'>
+        <argument key='cardinality' type='I64u' value='%nation.sequence.cardinality%' />
+      </cardinality_estimator>
+      <sequence_iterator type='partitioned_iterator' />
+    </random_sequence>
+    
+    <random_sequence key='region'>
+      <record_type>
+        <field name='region_key' type='I64u' />
+        <field name='name' type='Enum' enumref='region.name' />
+        <field name='comment' type='String' />
+      </record_type>
+      <output_format type='csv'>
+        <argument key='quoted' type='Bool' value='false' />
+        <argument key='delimiter' type='Char' value='|' />
+        <argument key='field' type='field_ref' ref='region:region_key' />
+        <argument key='field' type='field_ref' ref='region:name' />
+        <argument key='field' type='field_ref' ref='customer:comment' />
+      </output_format>
+      <setter_chain>
+        <setter key='set_region_key' type='field_setter'>
+          <argument key='field' type='field_ref' ref='region:region_key' />
+          <argument key='value' type='clustered_value_provider[I64u]'>
+            <argument key='probability' type='function_ref' ref='Pr[region.region_key]' />
+            <argument key='cardinality' type='const_range_provider[I64u]'>
+              <argument key='min' type='I64u' value='0' />
+              <argument key='max' type='I64u' value='%region.sequence.cardinality%' />
+            </argument>
+          </argument>
+        </setter>
+        <setter key='set_name' type='field_setter'>
+          <argument key='field' type='field_ref' ref='region:name' />
+          <argument key='value' type='clustered_value_provider[Enum]'>
+            <argument key='probability' type='function_ref' ref='Pr[region.region_key]' />
+            <argument key='cardinality' type='const_range_provider[Enum]'>
+              <argument key='min' type='Enum' value='0' />
+              <argument key='max' type='Enum' value='%region.sequence.cardinality%' />
+            </argument>
+          </argument>
+        </setter>
+        <setter key='set_comment' type='field_setter'> <!-- @FIXME: generate according to specification -->
+          <argument key='field' type='field_ref' ref='region:comment' />
+          <argument key='value' type='const_value_provider[String]'>
+            <argument key='value' type='String' value='temporary placeholder for a random comment' />
+          </argument>
+        </setter>
+      </setter_chain>
+      <cardinality_estimator type='const_estimator'>
+        <argument key='cardinality' type='I64u' value='%region.sequence.cardinality%' />
       </cardinality_estimator>
       <sequence_iterator type='partitioned_iterator' />
     </random_sequence>

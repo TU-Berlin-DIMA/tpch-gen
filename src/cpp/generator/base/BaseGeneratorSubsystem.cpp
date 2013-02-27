@@ -5,6 +5,8 @@
 #include "generator/PartGenerator.h"
 #include "generator/PartSuppGenerator.h"
 #include "generator/CustomerGenerator.h"
+#include "generator/NationGenerator.h"
+#include "generator/RegionGenerator.h"
 
 using namespace std;
 using namespace Poco;
@@ -23,6 +25,8 @@ AbstractSequenceGenerator::StageList initList()
     tmp.push_back(AbstractSequenceGenerator::Stage("part"));
     tmp.push_back(AbstractSequenceGenerator::Stage("part_supp"));
     tmp.push_back(AbstractSequenceGenerator::Stage("customer"));
+    tmp.push_back(AbstractSequenceGenerator::Stage("nation"));
+    tmp.push_back(AbstractSequenceGenerator::Stage("region"));
 
     return tmp;
 }
@@ -36,6 +40,8 @@ void BaseGeneratorSubsystem::registerGenerators()
     registerGenerator<TPCHGen::PartGenerator>("part");
     registerGenerator<TPCHGen::PartSuppGenerator>("part_supp");
     registerGenerator<TPCHGen::CustomerGenerator>("customer");
+    registerGenerator<TPCHGen::NationGenerator>("nation");
+    registerGenerator<TPCHGen::RegionGenerator>("region");
 }
 
 } // namespace Myriad

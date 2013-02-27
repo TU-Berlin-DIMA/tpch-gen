@@ -65,7 +65,7 @@ public:
         _valueProvider03(config.function< Myriad::UniformPrFunction<I16u> >("Pr[common.address_length]")),
         _valueProvider04(_valueProvider02, _valueProvider03),
         _setAddress(_valueProvider04),
-        _valueProvider05(config.function< Myriad::UniformPrFunction<I64u> >("Pr[customer.nation_key]")),
+        _valueProvider05(config.function< Myriad::UniformPrFunction<I64u> >("Pr[nation.nation_key]")),
         _setNationKey(_valueProvider05),
         _valueProvider06(config.function< Myriad::UniformPrFunction<I16u> >("Pr[common.phone_component]")),
         _valueProvider07(3),
