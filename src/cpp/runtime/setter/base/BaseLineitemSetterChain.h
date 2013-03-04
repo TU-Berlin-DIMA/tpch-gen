@@ -183,7 +183,14 @@ public:
     {
         Myriad::Interval<I64u> result(0, _sequenceCardinality);
 
-        // apply inverse setter chain
+        // explicitly mimic inverse setter logic for gen_id
+        if (predicate.bound(Myriad::RecordTraits<Lineitem>::GEN_ID))
+        {
+            const AutoPtr<Lineitem>& valueHolder = predicate.valueHolder();
+            result.intersect(Myriad::Interval<I64u>(valueHolder->genID(), valueHolder->genID()+1));
+        }
+
+        // apply inverse setter chain, setters are applied in the same order
         _setOrderKey.filterRange(predicate, result);
         _setPartKey.filterRange(predicate, result);
         _setSuppKey.filterRange(predicate, result);
