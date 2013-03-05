@@ -104,8 +104,6 @@ public:
         _setSupplyCost.filterRange(predicate, result);
         _setComment.filterRange(predicate, result);
 
-        std::cout << "PartSupp filter is " << result << std::endl;
-
         return result;
     }
 
