@@ -130,7 +130,14 @@ inline const vector<Enum>& BasePart::nameComponents() const
 
 inline const String& BasePart::nameComponentsEnumValue(size_t i) const
 {
-    return _meta.name_components[_name_components[i]];
+    if (_name_components[i] == Myriad::nullValue<Enum>())
+    {
+        return Myriad::nullValue<String>();
+    }
+    else
+    {
+        return _meta.name_components[_name_components[i]];
+    }
 }
 
 inline void BasePart::type(const Enum& v)
@@ -145,7 +152,14 @@ inline const Enum& BasePart::type() const
 
 inline const String& BasePart::typeEnumValue() const
 {
-    return _meta.type[_type];
+    if (_type == Myriad::nullValue<Enum>())
+    {
+        return Myriad::nullValue<String>();
+    }
+    else
+    {
+        return _meta.type[_type];
+    }
 }
 
 inline void BasePart::size(const I16u& v)
@@ -170,7 +184,14 @@ inline const Enum& BasePart::container() const
 
 inline const String& BasePart::containerEnumValue() const
 {
-    return _meta.container[_container];
+    if (_container == Myriad::nullValue<Enum>())
+    {
+        return Myriad::nullValue<String>();
+    }
+    else
+    {
+        return _meta.container[_container];
+    }
 }
 
 inline void BasePart::comment(const String& v)

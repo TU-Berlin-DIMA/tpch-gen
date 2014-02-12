@@ -142,7 +142,14 @@ inline const Enum& BaseCustomer::mktSegment() const
 
 inline const String& BaseCustomer::mktSegmentEnumValue() const
 {
-    return _meta.mkt_segment[_mkt_segment];
+    if (_mkt_segment == Myriad::nullValue<Enum>())
+    {
+        return Myriad::nullValue<String>();
+    }
+    else
+    {
+        return _meta.mkt_segment[_mkt_segment];
+    }
 }
 
 inline void BaseCustomer::comment(const String& v)

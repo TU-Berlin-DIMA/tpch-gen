@@ -262,7 +262,14 @@ inline const Enum& BaseLineitem::shipInstruct() const
 
 inline const String& BaseLineitem::shipInstructEnumValue() const
 {
-    return _meta.ship_instruct[_ship_instruct];
+    if (_ship_instruct == Myriad::nullValue<Enum>())
+    {
+        return Myriad::nullValue<String>();
+    }
+    else
+    {
+        return _meta.ship_instruct[_ship_instruct];
+    }
 }
 
 inline void BaseLineitem::shipMode(const Enum& v)
@@ -277,7 +284,14 @@ inline const Enum& BaseLineitem::shipMode() const
 
 inline const String& BaseLineitem::shipModeEnumValue() const
 {
-    return _meta.ship_mode[_ship_mode];
+    if (_ship_mode == Myriad::nullValue<Enum>())
+    {
+        return Myriad::nullValue<String>();
+    }
+    else
+    {
+        return _meta.ship_mode[_ship_mode];
+    }
 }
 
 inline void BaseLineitem::comment(const String& v)

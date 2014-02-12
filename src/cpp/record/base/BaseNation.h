@@ -83,7 +83,14 @@ inline const Enum& BaseNation::name() const
 
 inline const String& BaseNation::nameEnumValue() const
 {
-    return _meta.name[_name];
+    if (_name == Myriad::nullValue<Enum>())
+    {
+        return Myriad::nullValue<String>();
+    }
+    else
+    {
+        return _meta.name[_name];
+    }
 }
 
 inline void BaseNation::regionKey(const Enum& v)
@@ -98,7 +105,14 @@ inline const Enum& BaseNation::regionKey() const
 
 inline const String& BaseNation::regionKeyEnumValue() const
 {
-    return _meta.region_key[_region_key];
+    if (_region_key == Myriad::nullValue<Enum>())
+    {
+        return Myriad::nullValue<String>();
+    }
+    else
+    {
+        return _meta.region_key[_region_key];
+    }
 }
 
 inline void BaseNation::comment(const String& v)

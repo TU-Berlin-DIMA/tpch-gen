@@ -119,7 +119,14 @@ inline const Enum& BaseOrder::orderStatus() const
 
 inline const String& BaseOrder::orderStatusEnumValue() const
 {
-    return _meta.order_status[_order_status];
+    if (_order_status == Myriad::nullValue<Enum>())
+    {
+        return Myriad::nullValue<String>();
+    }
+    else
+    {
+        return _meta.order_status[_order_status];
+    }
 }
 
 inline void BaseOrder::totalPrice(const Decimal& v)
@@ -154,7 +161,14 @@ inline const Enum& BaseOrder::orderPriority() const
 
 inline const String& BaseOrder::orderPriorityEnumValue() const
 {
-    return _meta.order_priority[_order_priority];
+    if (_order_priority == Myriad::nullValue<Enum>())
+    {
+        return Myriad::nullValue<String>();
+    }
+    else
+    {
+        return _meta.order_priority[_order_priority];
+    }
 }
 
 inline void BaseOrder::clerkKey(const I64u& v)

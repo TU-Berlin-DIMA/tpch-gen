@@ -78,7 +78,14 @@ inline const Enum& BaseRegion::name() const
 
 inline const String& BaseRegion::nameEnumValue() const
 {
-    return _meta.name[_name];
+    if (_name == Myriad::nullValue<Enum>())
+    {
+        return Myriad::nullValue<String>();
+    }
+    else
+    {
+        return _meta.name[_name];
+    }
 }
 
 inline void BaseRegion::comment(const String& v)
