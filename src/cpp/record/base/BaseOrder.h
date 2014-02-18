@@ -63,9 +63,6 @@ public:
     void shipPriority(const I16u& v);
     const I16u& shipPriority() const;
 
-    void comment(const String& v);
-    const String& comment() const;
-
     void lineitemsCount(const I32u& v);
     const I32u& lineitemsCount() const;
 
@@ -80,7 +77,6 @@ protected:
     Enum _order_priority;
     I64u _clerk_key;
     I16u _ship_priority;
-    String _comment;
     I32u _lineitems_count;
 
     // meta
@@ -191,16 +187,6 @@ inline const I16u& BaseOrder::shipPriority() const
     return _ship_priority;
 }
 
-inline void BaseOrder::comment(const String& v)
-{
-    _comment = v;
-}
-
-inline const String& BaseOrder::comment() const
-{
-    return _comment;
-}
-
 inline void BaseOrder::lineitemsCount(const I32u& v)
 {
     _lineitems_count = v;
@@ -227,7 +213,7 @@ struct RecordTraits<TPCHGen::Order>
     typedef TPCHGen::OrderSetterChain SetterChainType;
     typedef RecordFactory<TPCHGen::Order> FactoryType;
 
-    enum Field { UNKNOWN, GEN_ID, ORDER_KEY, CUST_KEY, ORDER_STATUS, TOTAL_PRICE, ORDER_DATE, ORDER_PRIORITY, CLERK_KEY, CLERK, SHIP_PRIORITY, COMMENT, LINEITEMS_COUNT };
+    enum Field { UNKNOWN, GEN_ID, ORDER_KEY, CUST_KEY, ORDER_STATUS, TOTAL_PRICE, ORDER_DATE, ORDER_PRIORITY, CLERK_KEY, CLERK, SHIP_PRIORITY, LINEITEMS_COUNT };
 };
 
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -252,8 +238,6 @@ inline void AbstractOutputCollector<TPCHGen::BaseOrder>::serialize(std::ostream&
     write(out, record.clerk(), false);
     out << '|';
     write(out, record.shipPriority(), false);
-    out << '|';
-    write(out, record.comment(), false);
     out << '|';
     out << '\n';
 }

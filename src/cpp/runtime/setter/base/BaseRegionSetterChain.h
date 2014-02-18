@@ -9,7 +9,6 @@
 #include "record/RegionUtil.h"
 #include "runtime/provider/range/ConstRangeProvider.h"
 #include "runtime/provider/value/ClusteredValueProvider.h"
-#include "runtime/provider/value/ConstValueProvider.h"
 #include "runtime/setter/FieldSetter.h"
 
 namespace TPCHGen {
@@ -34,9 +33,6 @@ public:
     typedef Myriad::ConstRangeProvider< Enum, Region > RangeProvider02Type;
     typedef Myriad::ClusteredValueProvider< Enum, Region, Myriad::UniformPrFunction<I64u>, RangeProvider02Type > ValueProvider02Type;
     typedef Myriad::FieldSetter< Region, Myriad::RecordTraits<Region>::NAME, ValueProvider02Type > SetNameType;
-    // runtime components for setter `set_comment`
-    typedef Myriad::ConstValueProvider< String, Region > ValueProvider03Type;
-    typedef Myriad::FieldSetter< Region, Myriad::RecordTraits<Region>::COMMENT, ValueProvider03Type > SetCommentType;
 
     BaseRegionSetterChain(Myriad::BaseSetterChain::OperationMode& opMode, Myriad::RandomStream& random, Myriad::GeneratorConfig& config) :
         Myriad::SetterChain<Region>(opMode, random),
@@ -47,8 +43,6 @@ public:
         _rangeProvider02(0, config.parameter<Enum>("region.sequence.cardinality")),
         _valueProvider02(config.function< Myriad::UniformPrFunction<I64u> >("Pr[region.region_key]"), _rangeProvider02),
         _setName(_valueProvider02),
-        _valueProvider03("temporary placeholder for a random comment"),
-        _setComment(_valueProvider03),
         _logger(Logger::get("region.setter.chain"))
     {
     }
@@ -69,7 +63,6 @@ public:
         // apply setter chain
         me->_setRegionKey(recordPtr, me->_random);
         me->_setName(recordPtr, me->_random);
-        me->_setComment(recordPtr, me->_random);
     }
 
     /**
@@ -89,7 +82,6 @@ public:
         // apply inverse setter chain, setters are applied in the same order
         _setRegionKey.filterRange(predicate, result);
         _setName.filterRange(predicate, result);
-        _setComment.filterRange(predicate, result);
 
         return result;
     }
@@ -108,10 +100,6 @@ protected:
     RangeProvider02Type _rangeProvider02;
     ValueProvider02Type _valueProvider02;
     SetNameType _setName;
-
-    // runtime components for setter `set_comment`
-    ValueProvider03Type _valueProvider03;
-    SetCommentType _setComment;
 
     // Logger instance.
     Logger& _logger;

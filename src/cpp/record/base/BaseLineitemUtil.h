@@ -353,25 +353,6 @@ struct RecordFieldTraits<RecordTraits<TPCHGen::Lineitem>::SHIP_MODE, TPCHGen::Li
     }
 };
 
-// comment
-template<>
-struct RecordFieldTraits<RecordTraits<TPCHGen::Lineitem>::COMMENT, TPCHGen::Lineitem>
-{
-    typedef String FieldType;
-    typedef MethodTraits<TPCHGen::Lineitem, FieldType>::RefSetter FieldSetterType;
-    typedef MethodTraits<TPCHGen::Lineitem, FieldType>::RefGetter FieldGetterType;
-
-    static inline FieldSetterType setter()
-    {
-        return static_cast<FieldSetterType>(&TPCHGen::Lineitem::comment);
-    }
-
-    static inline FieldGetterType getter()
-    {
-        return static_cast<FieldGetterType>(&TPCHGen::Lineitem::comment);
-    }
-};
-
 // order
 template<>
 struct RecordFieldTraits<RecordTraits<TPCHGen::Lineitem>::ORDER, TPCHGen::Lineitem>

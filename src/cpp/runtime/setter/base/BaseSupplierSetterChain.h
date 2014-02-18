@@ -48,9 +48,6 @@ public:
     // runtime components for setter `set_acct_bal`
     typedef Myriad::RandomValueProvider< Decimal, Supplier, Myriad::UniformPrFunction<Decimal>, 0 > ValueProvider09Type;
     typedef Myriad::FieldSetter< Supplier, Myriad::RecordTraits<Supplier>::ACCT_BAL, ValueProvider09Type > SetAcctBalType;
-    // runtime components for setter `set_comment`
-    typedef Myriad::ConstValueProvider< String, Supplier > ValueProvider10Type;
-    typedef Myriad::FieldSetter< Supplier, Myriad::RecordTraits<Supplier>::COMMENT, ValueProvider10Type > SetCommentType;
 
     BaseSupplierSetterChain(Myriad::BaseSetterChain::OperationMode& opMode, Myriad::RandomStream& random, Myriad::GeneratorConfig& config) :
         Myriad::SetterChain<Supplier>(opMode, random),
@@ -70,8 +67,6 @@ public:
         _setPhoneComponents(_valueProvider08),
         _valueProvider09(config.function< Myriad::UniformPrFunction<Decimal> >("Pr[supplier.acct_bal]")),
         _setAcctBal(_valueProvider09),
-        _valueProvider10("temporary placeholder for a random comment, and some more extra text to until 87 chars!"),
-        _setComment(_valueProvider10),
         _logger(Logger::get("supplier.setter.chain"))
     {
     }
@@ -95,7 +90,6 @@ public:
         me->_setNationKey(recordPtr, me->_random);
         me->_setPhoneComponents(recordPtr, me->_random);
         me->_setAcctBal(recordPtr, me->_random);
-        me->_setComment(recordPtr, me->_random);
     }
 
     /**
@@ -118,7 +112,6 @@ public:
         _setNationKey.filterRange(predicate, result);
         _setPhoneComponents.filterRange(predicate, result);
         _setAcctBal.filterRange(predicate, result);
-        _setComment.filterRange(predicate, result);
 
         return result;
     }
@@ -152,10 +145,6 @@ protected:
     // runtime components for setter `set_acct_bal`
     ValueProvider09Type _valueProvider09;
     SetAcctBalType _setAcctBal;
-
-    // runtime components for setter `set_comment`
-    ValueProvider10Type _valueProvider10;
-    SetCommentType _setComment;
 
     // Logger instance.
     Logger& _logger;

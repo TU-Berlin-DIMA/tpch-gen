@@ -144,25 +144,6 @@ struct RecordFieldTraits<RecordTraits<TPCHGen::Supplier>::ACCT_BAL, TPCHGen::Sup
     }
 };
 
-// comment
-template<>
-struct RecordFieldTraits<RecordTraits<TPCHGen::Supplier>::COMMENT, TPCHGen::Supplier>
-{
-    typedef String FieldType;
-    typedef MethodTraits<TPCHGen::Supplier, FieldType>::RefSetter FieldSetterType;
-    typedef MethodTraits<TPCHGen::Supplier, FieldType>::RefGetter FieldGetterType;
-
-    static inline FieldSetterType setter()
-    {
-        return static_cast<FieldSetterType>(&TPCHGen::Supplier::comment);
-    }
-
-    static inline FieldGetterType getter()
-    {
-        return static_cast<FieldGetterType>(&TPCHGen::Supplier::comment);
-    }
-};
-
 } // namespace Myriad
 
 #endif /* BASESUPPLIERUTIL_H_ */

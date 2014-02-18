@@ -50,12 +50,9 @@ public:
     // runtime components for setter `set_ship_priority`
     typedef Myriad::ConstValueProvider< I16u, Order > ValueProvider08Type;
     typedef Myriad::FieldSetter< Order, Myriad::RecordTraits<Order>::SHIP_PRIORITY, ValueProvider08Type > SetShipPriorityType;
-    // runtime components for setter `set_comment`
-    typedef Myriad::ConstValueProvider< String, Order > ValueProvider09Type;
-    typedef Myriad::FieldSetter< Order, Myriad::RecordTraits<Order>::COMMENT, ValueProvider09Type > SetCommentType;
     // runtime components for setter `set_lineitems_count`
-    typedef Myriad::RandomValueProvider< I32u, Order, Myriad::UniformPrFunction<I32u>, 0 > ValueProvider10Type;
-    typedef Myriad::FieldSetter< Order, Myriad::RecordTraits<Order>::LINEITEMS_COUNT, ValueProvider10Type > SetLineitemsCountType;
+    typedef Myriad::RandomValueProvider< I32u, Order, Myriad::UniformPrFunction<I32u>, 0 > ValueProvider09Type;
+    typedef Myriad::FieldSetter< Order, Myriad::RecordTraits<Order>::LINEITEMS_COUNT, ValueProvider09Type > SetLineitemsCountType;
 
     BaseOrderSetterChain(Myriad::BaseSetterChain::OperationMode& opMode, Myriad::RandomStream& random, Myriad::GeneratorConfig& config) :
         Myriad::SetterChain<Order>(opMode, random),
@@ -76,10 +73,8 @@ public:
         _setClerkKey(_valueProvider07),
         _valueProvider08(0),
         _setShipPriority(_valueProvider08),
-        _valueProvider09("pholder for a random comment"),
-        _setComment(_valueProvider09),
-        _valueProvider10(config.function< Myriad::UniformPrFunction<I32u> >("Pr[order.lineitems_count]")),
-        _setLineitemsCount(_valueProvider10),
+        _valueProvider09(config.function< Myriad::UniformPrFunction<I32u> >("Pr[order.lineitems_count]")),
+        _setLineitemsCount(_valueProvider09),
         _logger(Logger::get("order.setter.chain"))
     {
     }
@@ -106,7 +101,6 @@ public:
         me->_setOrderPriority(recordPtr, me->_random);
         me->_setClerkKey(recordPtr, me->_random);
         me->_setShipPriority(recordPtr, me->_random);
-        me->_setComment(recordPtr, me->_random);
         me->_setLineitemsCount(recordPtr, me->_random);
     }
 
@@ -133,7 +127,6 @@ public:
         _setOrderPriority.filterRange(predicate, result);
         _setClerkKey.filterRange(predicate, result);
         _setShipPriority.filterRange(predicate, result);
-        _setComment.filterRange(predicate, result);
         _setLineitemsCount.filterRange(predicate, result);
 
         return result;
@@ -180,12 +173,8 @@ protected:
     ValueProvider08Type _valueProvider08;
     SetShipPriorityType _setShipPriority;
 
-    // runtime components for setter `set_comment`
-    ValueProvider09Type _valueProvider09;
-    SetCommentType _setComment;
-
     // runtime components for setter `set_lineitems_count`
-    ValueProvider10Type _valueProvider10;
+    ValueProvider09Type _valueProvider09;
     SetLineitemsCountType _setLineitemsCount;
 
     // Logger instance.

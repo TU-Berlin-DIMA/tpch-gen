@@ -49,9 +49,6 @@ public:
     void supplyCost(const Decimal& v);
     const Decimal& supplyCost() const;
 
-    void comment(const String& v);
-    const String& comment() const;
-
 protected:
 
     // fields
@@ -59,7 +56,6 @@ protected:
     I64u _supp_cardinality;
     I16u _avail_qty;
     Decimal _supply_cost;
-    String _comment;
 
     // meta
     const PartSuppMeta& _meta;
@@ -105,16 +101,6 @@ inline const Decimal& BasePartSupp::supplyCost() const
     return _supply_cost;
 }
 
-inline void BasePartSupp::comment(const String& v)
-{
-    _comment = v;
-}
-
-inline const String& BasePartSupp::comment() const
-{
-    return _comment;
-}
-
 } // namespace TPCHGen
 
 namespace Myriad {
@@ -131,7 +117,7 @@ struct RecordTraits<TPCHGen::PartSupp>
     typedef TPCHGen::PartSuppSetterChain SetterChainType;
     typedef RecordFactory<TPCHGen::PartSupp> FactoryType;
 
-    enum Field { UNKNOWN, GEN_ID, PART_KEY, SUPP_CARDINALITY, SUPP_KEY, AVAIL_QTY, SUPPLY_COST, COMMENT };
+    enum Field { UNKNOWN, GEN_ID, PART_KEY, SUPP_CARDINALITY, SUPP_KEY, AVAIL_QTY, SUPPLY_COST };
 };
 
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -148,8 +134,6 @@ inline void AbstractOutputCollector<TPCHGen::BasePartSupp>::serialize(std::ostre
     write(out, record.availQty(), false);
     out << '|';
     write(out, record.supplyCost(), false);
-    out << '|';
-    write(out, record.comment(), false);
     out << '|';
     out << '\n';
 }

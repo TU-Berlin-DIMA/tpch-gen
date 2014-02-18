@@ -163,25 +163,6 @@ struct RecordFieldTraits<RecordTraits<TPCHGen::Customer>::MKT_SEGMENT, TPCHGen::
     }
 };
 
-// comment
-template<>
-struct RecordFieldTraits<RecordTraits<TPCHGen::Customer>::COMMENT, TPCHGen::Customer>
-{
-    typedef String FieldType;
-    typedef MethodTraits<TPCHGen::Customer, FieldType>::RefSetter FieldSetterType;
-    typedef MethodTraits<TPCHGen::Customer, FieldType>::RefGetter FieldGetterType;
-
-    static inline FieldSetterType setter()
-    {
-        return static_cast<FieldSetterType>(&TPCHGen::Customer::comment);
-    }
-
-    static inline FieldGetterType getter()
-    {
-        return static_cast<FieldGetterType>(&TPCHGen::Customer::comment);
-    }
-};
-
 } // namespace Myriad
 
 #endif /* BASECUSTOMERUTIL_H_ */

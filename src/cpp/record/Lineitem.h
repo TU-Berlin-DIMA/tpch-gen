@@ -82,7 +82,6 @@ inline void AbstractOutputCollector<TPCHGen::Lineitem>::serialize(std::ostream& 
     out << '|';
     write(out, record.shipModeEnumValue(), false);
     out << '|';
-    write(out, record.comment(), false);
     out << '|';
     out << '\n';
 }

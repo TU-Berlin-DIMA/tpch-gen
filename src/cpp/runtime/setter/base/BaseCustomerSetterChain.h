@@ -51,9 +51,6 @@ public:
     // runtime components for setter `set_mkt_segment`
     typedef Myriad::RandomValueProvider< Enum, Customer, Myriad::UniformPrFunction<Enum>, 0 > ValueProvider10Type;
     typedef Myriad::FieldSetter< Customer, Myriad::RecordTraits<Customer>::MKT_SEGMENT, ValueProvider10Type > SetMktSegmentType;
-    // runtime components for setter `set_comment`
-    typedef Myriad::ConstValueProvider< String, Customer > ValueProvider11Type;
-    typedef Myriad::FieldSetter< Customer, Myriad::RecordTraits<Customer>::COMMENT, ValueProvider11Type > SetCommentType;
 
     BaseCustomerSetterChain(Myriad::BaseSetterChain::OperationMode& opMode, Myriad::RandomStream& random, Myriad::GeneratorConfig& config) :
         Myriad::SetterChain<Customer>(opMode, random),
@@ -75,8 +72,6 @@ public:
         _setAcctBal(_valueProvider09),
         _valueProvider10(config.function< Myriad::UniformPrFunction<Enum> >("Pr[customer.mkt_segment]")),
         _setMktSegment(_valueProvider10),
-        _valueProvider11("temporary placeholder for a random commentxx"),
-        _setComment(_valueProvider11),
         _logger(Logger::get("customer.setter.chain"))
     {
     }
@@ -101,7 +96,6 @@ public:
         me->_setPhoneComponents(recordPtr, me->_random);
         me->_setAcctBal(recordPtr, me->_random);
         me->_setMktSegment(recordPtr, me->_random);
-        me->_setComment(recordPtr, me->_random);
     }
 
     /**
@@ -125,7 +119,6 @@ public:
         _setPhoneComponents.filterRange(predicate, result);
         _setAcctBal.filterRange(predicate, result);
         _setMktSegment.filterRange(predicate, result);
-        _setComment.filterRange(predicate, result);
 
         return result;
     }
@@ -163,10 +156,6 @@ protected:
     // runtime components for setter `set_mkt_segment`
     ValueProvider10Type _valueProvider10;
     SetMktSegmentType _setMktSegment;
-
-    // runtime components for setter `set_comment`
-    ValueProvider11Type _valueProvider11;
-    SetCommentType _setComment;
 
     // Logger instance.
     Logger& _logger;

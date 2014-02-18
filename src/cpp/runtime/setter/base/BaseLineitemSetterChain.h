@@ -90,9 +90,6 @@ public:
     // runtime components for setter `set_ship_mode`
     typedef Myriad::RandomValueProvider< Enum, Lineitem, Myriad::UniformPrFunction<Enum>, 0 > ValueProvider17Type;
     typedef Myriad::FieldSetter< Lineitem, Myriad::RecordTraits<Lineitem>::SHIP_MODE, ValueProvider17Type > SetShipModeType;
-    // runtime components for setter `set_comment`
-    typedef Myriad::ConstValueProvider< String, Lineitem > ValueProvider18Type;
-    typedef Myriad::FieldSetter< Lineitem, Myriad::RecordTraits<Lineitem>::COMMENT, ValueProvider18Type > SetCommentType;
 
     BaseLineitemSetterChain(Myriad::BaseSetterChain::OperationMode& opMode, Myriad::RandomStream& random, Myriad::GeneratorConfig& config) :
         Myriad::SetterChain<Lineitem>(opMode, random),
@@ -137,8 +134,6 @@ public:
         _setShipInstruct(_valueProvider16),
         _valueProvider17(config.function< Myriad::UniformPrFunction<Enum> >("Pr[lineitem.ship_mode]")),
         _setShipMode(_valueProvider17),
-        _valueProvider18("comment pholder"),
-        _setComment(_valueProvider18),
         _logger(Logger::get("lineitem.setter.chain"))
     {
     }
@@ -173,7 +168,6 @@ public:
         me->_setLineStatus(recordPtr, me->_random);
         me->_setShipInstruct(recordPtr, me->_random);
         me->_setShipMode(recordPtr, me->_random);
-        me->_setComment(recordPtr, me->_random);
     }
 
     /**
@@ -204,7 +198,6 @@ public:
         _setLineStatus.filterRange(predicate, result);
         _setShipInstruct.filterRange(predicate, result);
         _setShipMode.filterRange(predicate, result);
-        _setComment.filterRange(predicate, result);
 
         return result;
     }
@@ -285,10 +278,6 @@ protected:
     // runtime components for setter `set_ship_mode`
     ValueProvider17Type _valueProvider17;
     SetShipModeType _setShipMode;
-
-    // runtime components for setter `set_comment`
-    ValueProvider18Type _valueProvider18;
-    SetCommentType _setComment;
 
     // Logger instance.
     Logger& _logger;

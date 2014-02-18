@@ -46,16 +46,12 @@ public:
     const Enum& regionKey() const;
     const String& regionKeyEnumValue() const;
 
-    void comment(const String& v);
-    const String& comment() const;
-
 protected:
 
     // fields
     I64u _nation_key;
     Enum _name;
     Enum _region_key;
-    String _comment;
 
     // meta
     const NationMeta& _meta;
@@ -115,16 +111,6 @@ inline const String& BaseNation::regionKeyEnumValue() const
     }
 }
 
-inline void BaseNation::comment(const String& v)
-{
-    _comment = v;
-}
-
-inline const String& BaseNation::comment() const
-{
-    return _comment;
-}
-
 } // namespace TPCHGen
 
 namespace Myriad {
@@ -141,7 +127,7 @@ struct RecordTraits<TPCHGen::Nation>
     typedef TPCHGen::NationSetterChain SetterChainType;
     typedef RecordFactory<TPCHGen::Nation> FactoryType;
 
-    enum Field { UNKNOWN, GEN_ID, NATION_KEY, NAME, REGION_KEY, COMMENT };
+    enum Field { UNKNOWN, GEN_ID, NATION_KEY, NAME, REGION_KEY };
 };
 
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -156,8 +142,6 @@ inline void AbstractOutputCollector<TPCHGen::BaseNation>::serialize(std::ostream
     write(out, record.nameEnumValue(), false);
     out << '|';
     write(out, record.regionKeyEnumValue(), false);
-    out << '|';
-    write(out, record.comment(), false);
     out << '|';
     out << '\n';
 }

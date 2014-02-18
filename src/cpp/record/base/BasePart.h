@@ -68,9 +68,6 @@ public:
 
     virtual const Decimal retailPrice() const = 0;
 
-    void comment(const String& v);
-    const String& comment() const;
-
 protected:
 
     // fields
@@ -81,7 +78,6 @@ protected:
     Enum _type;
     I16u _size;
     Enum _container;
-    String _comment;
 
     // meta
     const PartMeta& _meta;
@@ -194,16 +190,6 @@ inline const String& BasePart::containerEnumValue() const
     }
 }
 
-inline void BasePart::comment(const String& v)
-{
-    _comment = v;
-}
-
-inline const String& BasePart::comment() const
-{
-    return _comment;
-}
-
 } // namespace TPCHGen
 
 namespace Myriad {
@@ -220,7 +206,7 @@ struct RecordTraits<TPCHGen::Part>
     typedef TPCHGen::PartSetterChain SetterChainType;
     typedef RecordFactory<TPCHGen::Part> FactoryType;
 
-    enum Field { UNKNOWN, GEN_ID, PART_KEY, PARAM_M, PARAM_N, NAME_COMPONENTS, NAME, MFGR, BRAND, TYPE, SIZE, CONTAINER, RETAIL_PRICE, COMMENT };
+    enum Field { UNKNOWN, GEN_ID, PART_KEY, PARAM_M, PARAM_N, NAME_COMPONENTS, NAME, MFGR, BRAND, TYPE, SIZE, CONTAINER, RETAIL_PRICE };
 };
 
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -245,8 +231,6 @@ inline void AbstractOutputCollector<TPCHGen::BasePart>::serialize(std::ostream& 
     write(out, record.containerEnumValue(), false);
     out << '|';
     write(out, record.retailPrice(), false);
-    out << '|';
-    write(out, record.comment(), false);
     out << '|';
     out << '\n';
 }

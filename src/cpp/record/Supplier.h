@@ -55,7 +55,6 @@ inline void AbstractOutputCollector<TPCHGen::Supplier>::serialize(std::ostream& 
     out << '|';
     write(out, NumberFormatter::format(record.acctBal(), 2), false);
     out << '|';
-    write(out, record.comment(), false);
     out << '|';
     out << '\n';
 }

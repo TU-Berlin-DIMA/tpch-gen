@@ -56,9 +56,6 @@ public:
     void acctBal(const Decimal& v);
     const Decimal& acctBal() const;
 
-    void comment(const String& v);
-    const String& comment() const;
-
 protected:
 
     // fields
@@ -67,7 +64,6 @@ protected:
     I16u _nation_key;
     vector<I16u> _phone_components;
     Decimal _acct_bal;
-    String _comment;
 
     // meta
     const SupplierMeta& _meta;
@@ -125,16 +121,6 @@ inline const Decimal& BaseSupplier::acctBal() const
     return _acct_bal;
 }
 
-inline void BaseSupplier::comment(const String& v)
-{
-    _comment = v;
-}
-
-inline const String& BaseSupplier::comment() const
-{
-    return _comment;
-}
-
 } // namespace TPCHGen
 
 namespace Myriad {
@@ -151,7 +137,7 @@ struct RecordTraits<TPCHGen::Supplier>
     typedef TPCHGen::SupplierSetterChain SetterChainType;
     typedef RecordFactory<TPCHGen::Supplier> FactoryType;
 
-    enum Field { UNKNOWN, GEN_ID, SUPP_KEY, NAME, ADDRESS, NATION_KEY, PHONE_COMPONENTS, PHONE, ACCT_BAL, COMMENT };
+    enum Field { UNKNOWN, GEN_ID, SUPP_KEY, NAME, ADDRESS, NATION_KEY, PHONE_COMPONENTS, PHONE, ACCT_BAL };
 };
 
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -172,8 +158,6 @@ inline void AbstractOutputCollector<TPCHGen::BaseSupplier>::serialize(std::ostre
     write(out, record.phone(), false);
     out << '|';
     write(out, record.acctBal(), false);
-    out << '|';
-    write(out, record.comment(), false);
     out << '|';
     out << '\n';
 }

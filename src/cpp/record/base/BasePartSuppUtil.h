@@ -106,25 +106,6 @@ struct RecordFieldTraits<RecordTraits<TPCHGen::PartSupp>::SUPPLY_COST, TPCHGen::
     }
 };
 
-// comment
-template<>
-struct RecordFieldTraits<RecordTraits<TPCHGen::PartSupp>::COMMENT, TPCHGen::PartSupp>
-{
-    typedef String FieldType;
-    typedef MethodTraits<TPCHGen::PartSupp, FieldType>::RefSetter FieldSetterType;
-    typedef MethodTraits<TPCHGen::PartSupp, FieldType>::RefGetter FieldGetterType;
-
-    static inline FieldSetterType setter()
-    {
-        return static_cast<FieldSetterType>(&TPCHGen::PartSupp::comment);
-    }
-
-    static inline FieldGetterType getter()
-    {
-        return static_cast<FieldGetterType>(&TPCHGen::PartSupp::comment);
-    }
-};
-
 } // namespace Myriad
 
 #endif /* BASEPARTSUPPUTIL_H_ */

@@ -52,9 +52,6 @@ public:
     // runtime components for setter `set_container`
     typedef Myriad::RandomValueProvider< Enum, Part, Myriad::UniformPrFunction<Enum>, 0 > ValueProvider09Type;
     typedef Myriad::FieldSetter< Part, Myriad::RecordTraits<Part>::CONTAINER, ValueProvider09Type > SetContainerType;
-    // runtime components for setter `set_comment`
-    typedef Myriad::ConstValueProvider< String, Part > ValueProvider10Type;
-    typedef Myriad::FieldSetter< Part, Myriad::RecordTraits<Part>::COMMENT, ValueProvider10Type > SetCommentType;
 
     BasePartSetterChain(Myriad::BaseSetterChain::OperationMode& opMode, Myriad::RandomStream& random, Myriad::GeneratorConfig& config) :
         Myriad::SetterChain<Part>(opMode, random),
@@ -76,8 +73,6 @@ public:
         _setSize(_valueProvider08),
         _valueProvider09(config.function< Myriad::UniformPrFunction<Enum> >("Pr[part.container]")),
         _setContainer(_valueProvider09),
-        _valueProvider10("pholder!"),
-        _setComment(_valueProvider10),
         _logger(Logger::get("part.setter.chain"))
     {
     }
@@ -103,7 +98,6 @@ public:
         me->_setType(recordPtr, me->_random);
         me->_setSize(recordPtr, me->_random);
         me->_setContainer(recordPtr, me->_random);
-        me->_setComment(recordPtr, me->_random);
     }
 
     /**
@@ -128,7 +122,6 @@ public:
         _setType.filterRange(predicate, result);
         _setSize.filterRange(predicate, result);
         _setContainer.filterRange(predicate, result);
-        _setComment.filterRange(predicate, result);
 
         return result;
     }
@@ -168,10 +161,6 @@ protected:
     // runtime components for setter `set_container`
     ValueProvider09Type _valueProvider09;
     SetContainerType _setContainer;
-
-    // runtime components for setter `set_comment`
-    ValueProvider10Type _valueProvider10;
-    SetCommentType _setComment;
 
     // Logger instance.
     Logger& _logger;

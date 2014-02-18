@@ -90,9 +90,6 @@ public:
     const Enum& shipMode() const;
     const String& shipModeEnumValue() const;
 
-    void comment(const String& v);
-    const String& comment() const;
-
     void order(const AutoPtr<Order>& v);
     const AutoPtr<Order>& order() const;
 
@@ -119,7 +116,6 @@ protected:
     Char _line_status;
     Enum _ship_instruct;
     Enum _ship_mode;
-    String _comment;
 
     // references
     AutoPtr<Order> _order;
@@ -294,16 +290,6 @@ inline const String& BaseLineitem::shipModeEnumValue() const
     }
 }
 
-inline void BaseLineitem::comment(const String& v)
-{
-    _comment = v;
-}
-
-inline const String& BaseLineitem::comment() const
-{
-    return _comment;
-}
-
 inline void BaseLineitem::order(const AutoPtr<Order>& v)
 {
     _order = v;
@@ -350,7 +336,7 @@ struct RecordTraits<TPCHGen::Lineitem>
     typedef TPCHGen::LineitemSetterChain SetterChainType;
     typedef RecordFactory<TPCHGen::Lineitem> FactoryType;
 
-    enum Field { UNKNOWN, GEN_ID, ORDER_KEY, PART_KEY, SUPP_KEY, LINE_NUMBER, QUANTITY, EXTENDED_PRICE, DISCOUNT, TAX, SHIP_DATE_OFFSET, SHIP_DATE, COMMIT_DATE_OFFSET, COMMIT_DATE, RECEIPT_DATE_OFFSET, RECEIPT_DATE, RETURN_FLAG, LINE_STATUS, SHIP_INSTRUCT, SHIP_MODE, COMMENT, ORDER, PART_SUPP, PART };
+    enum Field { UNKNOWN, GEN_ID, ORDER_KEY, PART_KEY, SUPP_KEY, LINE_NUMBER, QUANTITY, EXTENDED_PRICE, DISCOUNT, TAX, SHIP_DATE_OFFSET, SHIP_DATE, COMMIT_DATE_OFFSET, COMMIT_DATE, RECEIPT_DATE_OFFSET, RECEIPT_DATE, RETURN_FLAG, LINE_STATUS, SHIP_INSTRUCT, SHIP_MODE, ORDER, PART_SUPP, PART };
 };
 
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -389,8 +375,6 @@ inline void AbstractOutputCollector<TPCHGen::BaseLineitem>::serialize(std::ostre
     write(out, record.shipInstructEnumValue(), false);
     out << '|';
     write(out, record.shipModeEnumValue(), false);
-    out << '|';
-    write(out, record.comment(), false);
     out << '|';
     out << '\n';
 }

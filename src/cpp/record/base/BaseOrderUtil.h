@@ -182,25 +182,6 @@ struct RecordFieldTraits<RecordTraits<TPCHGen::Order>::SHIP_PRIORITY, TPCHGen::O
     }
 };
 
-// comment
-template<>
-struct RecordFieldTraits<RecordTraits<TPCHGen::Order>::COMMENT, TPCHGen::Order>
-{
-    typedef String FieldType;
-    typedef MethodTraits<TPCHGen::Order, FieldType>::RefSetter FieldSetterType;
-    typedef MethodTraits<TPCHGen::Order, FieldType>::RefGetter FieldGetterType;
-
-    static inline FieldSetterType setter()
-    {
-        return static_cast<FieldSetterType>(&TPCHGen::Order::comment);
-    }
-
-    static inline FieldGetterType getter()
-    {
-        return static_cast<FieldGetterType>(&TPCHGen::Order::comment);
-    }
-};
-
 // lineitems_count
 template<>
 struct RecordFieldTraits<RecordTraits<TPCHGen::Order>::LINEITEMS_COUNT, TPCHGen::Order>

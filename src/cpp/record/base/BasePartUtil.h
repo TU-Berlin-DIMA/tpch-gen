@@ -220,25 +220,6 @@ struct RecordFieldTraits<RecordTraits<TPCHGen::Part>::RETAIL_PRICE, TPCHGen::Par
     }
 };
 
-// comment
-template<>
-struct RecordFieldTraits<RecordTraits<TPCHGen::Part>::COMMENT, TPCHGen::Part>
-{
-    typedef String FieldType;
-    typedef MethodTraits<TPCHGen::Part, FieldType>::RefSetter FieldSetterType;
-    typedef MethodTraits<TPCHGen::Part, FieldType>::RefGetter FieldGetterType;
-
-    static inline FieldSetterType setter()
-    {
-        return static_cast<FieldSetterType>(&TPCHGen::Part::comment);
-    }
-
-    static inline FieldGetterType getter()
-    {
-        return static_cast<FieldGetterType>(&TPCHGen::Part::comment);
-    }
-};
-
 } // namespace Myriad
 
 #endif /* BASEPARTUTIL_H_ */

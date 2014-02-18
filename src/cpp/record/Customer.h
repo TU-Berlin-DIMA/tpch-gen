@@ -57,7 +57,6 @@ inline void AbstractOutputCollector<TPCHGen::Customer>::serialize(std::ostream& 
     out << '|';
     write(out, record.mktSegmentEnumValue(), false);
     out << '|';
-    write(out, record.comment(), false);
     out << '|';
     out << '\n';
 }

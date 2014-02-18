@@ -40,9 +40,6 @@ public:
     // runtime components for setter `set_supply_cost`
     typedef Myriad::RandomValueProvider< Decimal, PartSupp, Myriad::UniformPrFunction<Decimal>, 0 > ValueProvider04Type;
     typedef Myriad::FieldSetter< PartSupp, Myriad::RecordTraits<PartSupp>::SUPPLY_COST, ValueProvider04Type > SetSupplyCostType;
-    // runtime components for setter `set_comment`
-    typedef Myriad::ConstValueProvider< String, PartSupp > ValueProvider05Type;
-    typedef Myriad::FieldSetter< PartSupp, Myriad::RecordTraits<PartSupp>::COMMENT, ValueProvider05Type > SetCommentType;
 
     BasePartSuppSetterChain(Myriad::BaseSetterChain::OperationMode& opMode, Myriad::RandomStream& random, Myriad::GeneratorConfig& config) :
         Myriad::SetterChain<PartSupp>(opMode, random),
@@ -56,8 +53,6 @@ public:
         _setAvailQty(_valueProvider03),
         _valueProvider04(config.function< Myriad::UniformPrFunction<Decimal> >("Pr[part_supp.supply_cost]")),
         _setSupplyCost(_valueProvider04),
-        _valueProvider05("temporary placeholder for a random comment + some random text, 75 chars..."),
-        _setComment(_valueProvider05),
         _logger(Logger::get("part_supp.setter.chain"))
     {
     }
@@ -80,7 +75,6 @@ public:
         me->_setSuppCardinality(recordPtr, me->_random);
         me->_setAvailQty(recordPtr, me->_random);
         me->_setSupplyCost(recordPtr, me->_random);
-        me->_setComment(recordPtr, me->_random);
     }
 
     /**
@@ -102,7 +96,6 @@ public:
         _setSuppCardinality.filterRange(predicate, result);
         _setAvailQty.filterRange(predicate, result);
         _setSupplyCost.filterRange(predicate, result);
-        _setComment.filterRange(predicate, result);
 
         return result;
     }
@@ -128,10 +121,6 @@ protected:
     // runtime components for setter `set_supply_cost`
     ValueProvider04Type _valueProvider04;
     SetSupplyCostType _setSupplyCost;
-
-    // runtime components for setter `set_comment`
-    ValueProvider05Type _valueProvider05;
-    SetCommentType _setComment;
 
     // Logger instance.
     Logger& _logger;

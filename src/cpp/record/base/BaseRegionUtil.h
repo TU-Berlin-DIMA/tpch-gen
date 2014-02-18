@@ -49,25 +49,6 @@ struct RecordFieldTraits<RecordTraits<TPCHGen::Region>::NAME, TPCHGen::Region>
     }
 };
 
-// comment
-template<>
-struct RecordFieldTraits<RecordTraits<TPCHGen::Region>::COMMENT, TPCHGen::Region>
-{
-    typedef String FieldType;
-    typedef MethodTraits<TPCHGen::Region, FieldType>::RefSetter FieldSetterType;
-    typedef MethodTraits<TPCHGen::Region, FieldType>::RefGetter FieldGetterType;
-
-    static inline FieldSetterType setter()
-    {
-        return static_cast<FieldSetterType>(&TPCHGen::Region::comment);
-    }
-
-    static inline FieldGetterType getter()
-    {
-        return static_cast<FieldGetterType>(&TPCHGen::Region::comment);
-    }
-};
-
 } // namespace Myriad
 
 #endif /* BASEREGIONUTIL_H_ */

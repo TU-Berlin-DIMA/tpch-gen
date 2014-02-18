@@ -60,9 +60,6 @@ public:
     const Enum& mktSegment() const;
     const String& mktSegmentEnumValue() const;
 
-    void comment(const String& v);
-    const String& comment() const;
-
 protected:
 
     // fields
@@ -72,7 +69,6 @@ protected:
     vector<I16u> _phone_components;
     Decimal _acct_bal;
     Enum _mkt_segment;
-    String _comment;
 
     // meta
     const CustomerMeta& _meta;
@@ -152,16 +148,6 @@ inline const String& BaseCustomer::mktSegmentEnumValue() const
     }
 }
 
-inline void BaseCustomer::comment(const String& v)
-{
-    _comment = v;
-}
-
-inline const String& BaseCustomer::comment() const
-{
-    return _comment;
-}
-
 } // namespace TPCHGen
 
 namespace Myriad {
@@ -178,7 +164,7 @@ struct RecordTraits<TPCHGen::Customer>
     typedef TPCHGen::CustomerSetterChain SetterChainType;
     typedef RecordFactory<TPCHGen::Customer> FactoryType;
 
-    enum Field { UNKNOWN, GEN_ID, CUST_KEY, NAME, ADDRESS, NATION_KEY, PHONE_COMPONENTS, PHONE, ACCT_BAL, MKT_SEGMENT, COMMENT };
+    enum Field { UNKNOWN, GEN_ID, CUST_KEY, NAME, ADDRESS, NATION_KEY, PHONE_COMPONENTS, PHONE, ACCT_BAL, MKT_SEGMENT };
 };
 
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -201,8 +187,6 @@ inline void AbstractOutputCollector<TPCHGen::BaseCustomer>::serialize(std::ostre
     write(out, record.acctBal(), false);
     out << '|';
     write(out, record.mktSegmentEnumValue(), false);
-    out << '|';
-    write(out, record.comment(), false);
     out << '|';
     out << '\n';
 }

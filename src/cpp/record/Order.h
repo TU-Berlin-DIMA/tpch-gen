@@ -53,7 +53,6 @@ inline void AbstractOutputCollector<TPCHGen::Order>::serialize(std::ostream& out
     out << '|';
     write(out, record.shipPriority(), false);
     out << '|';
-    write(out, record.comment(), false);
     out << '|';
     out << '\n';
 }

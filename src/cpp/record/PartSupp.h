@@ -47,7 +47,6 @@ inline void AbstractOutputCollector<TPCHGen::PartSupp>::serialize(std::ostream& 
     out << '|';
     write(out, NumberFormatter::format(record.supplyCost(),2), false);
     out << '|';
-    write(out, record.comment(), false);
     out << '|';
     out << '\n';
 }
