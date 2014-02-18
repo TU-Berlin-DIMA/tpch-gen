@@ -226,7 +226,6 @@
         <field name='phone_components' type='I16u[3]' />
         <field name='phone' type='String' derived='true' />
         <field name='acct_bal' type='Decimal' />
-        <field name='comment' type='String' />
       </record_type>
       <output_format type='csv'>
         <argument key='quoted' type='Bool' value='false' />
@@ -237,7 +236,6 @@
         <argument key='field' type='field_ref' ref='supplier:nation_key' />
         <argument key='field' type='field_ref' ref='supplier:phone' />
         <argument key='field' type='field_ref' ref='supplier:acct_bal' />
-        <argument key='field' type='field_ref' ref='supplier:comment' />
       </output_format>
       <setter_chain>
         <setter key='set_supp_key' type='field_setter'>
@@ -284,12 +282,6 @@
             <argument key='probability' type='function_ref' ref='Pr[supplier.acct_bal]' />
           </argument>
         </setter>
-        <setter key='set_comment' type='field_setter'> <!-- @FIXME: generate according to specification -->
-          <argument key='field' type='field_ref' ref='supplier:comment' />
-          <argument key='value' type='const_value_provider[String]'>
-            <argument key='value' type='String' value='temporary placeholder for a random comment, and some more extra text to until 87 chars!' />
-          </argument>
-        </setter>
       </setter_chain>
       <cardinality_estimator type='linear_scale_estimator'>
         <argument key='base_cardinality' type='I64u' value='%supplier.sequence.base_cardinality%' />
@@ -310,7 +302,6 @@
         <field name='size' type='I16u' />
         <field name='container' type='Enum' enumref='part.container' />
         <field name='retail_price' type='Decimal' derived='true' />
-        <field name='comment' type='String' />
       </record_type>
       <output_format type='csv'>
         <argument key='quoted' type='Bool' value='false' />
@@ -323,7 +314,6 @@
         <argument key='field' type='field_ref' ref='part:size' />
         <argument key='field' type='field_ref' ref='part:container' />
         <argument key='field' type='field_ref' ref='part:retail_price' />
-        <argument key='field' type='field_ref' ref='part:comment' />
       </output_format>
       <setter_chain>
         <setter key='set_part_key' type='field_setter'>
@@ -377,12 +367,6 @@
             <argument key='probability' type='function_ref' ref='Pr[part.container]' />
           </argument>
         </setter>
-        <setter key='set_comment' type='field_setter'> <!-- @FIXME: generate according to specification -->
-          <argument key='field' type='field_ref' ref='part:comment' />
-          <argument key='value' type='const_value_provider[String]'>
-            <argument key='value' type='String' value='pholder!' />
-          </argument>
-        </setter>
       </setter_chain>
       <cardinality_estimator type='linear_scale_estimator'>
         <argument key='base_cardinality' type='I64u' value='%part.sequence.base_cardinality%' />
@@ -397,7 +381,6 @@
         <field name='supp_key' type='I64u' derived='true' />
         <field name='avail_qty' type='I16u' />
         <field name='supply_cost' type='Decimal' />
-        <field name='comment' type='String' />
       </record_type>
       <output_format type='csv'>
         <argument key='quoted' type='Bool' value='false' />
@@ -406,7 +389,6 @@
         <argument key='field' type='field_ref' ref='part_supp:supp_key' />
         <argument key='field' type='field_ref' ref='part_supp:avail_qty' />
         <argument key='field' type='field_ref' ref='part_supp:supply_cost' />
-        <argument key='field' type='field_ref' ref='part_supp:comment' />
       </output_format>
       <setter_chain>
         <setter key='set_part_key' type='field_setter'>
@@ -437,12 +419,6 @@
             <argument key='probability' type='function_ref' ref='Pr[part_supp.supply_cost]' />
           </argument>
         </setter>
-        <setter key='set_comment' type='field_setter'> <!-- @FIXME: generate according to specification -->
-          <argument key='field' type='field_ref' ref='part_supp:comment' />
-          <argument key='value' type='const_value_provider[String]'>
-            <argument key='value' type='String' value='temporary placeholder for a random comment + some random text, 75 chars...' />
-          </argument>
-        </setter>
       </setter_chain>
       <cardinality_estimator type='linear_scale_estimator'>
         <argument key='base_cardinality' type='I64u' value="%part_supp.sequence.base_cardinality%" />
@@ -460,7 +436,6 @@
         <field name='phone' type='String' derived='true' />
         <field name='acct_bal' type='Decimal' />
         <field name='mkt_segment' type='Enum' enumref='customer.mkt_segment' />
-        <field name='comment' type='String' />
       </record_type>
       <output_format type='csv'>
         <argument key='quoted' type='Bool' value='false' />
@@ -472,7 +447,6 @@
         <argument key='field' type='field_ref' ref='customer:phone' />
         <argument key='field' type='field_ref' ref='customer:acct_bal' />
         <argument key='field' type='field_ref' ref='customer:mkt_segment' />
-        <argument key='field' type='field_ref' ref='customer:comment' />
       </output_format>
       <setter_chain>
         <setter key='set_cust_key' type='field_setter'>
@@ -525,12 +499,6 @@
             <argument key='probability' type='function_ref' ref='Pr[customer.mkt_segment]' />
           </argument>
         </setter>
-        <setter key='set_comment' type='field_setter'> <!-- @FIXME: generate according to specification -->
-          <argument key='field' type='field_ref' ref='customer:comment' />
-          <argument key='value' type='const_value_provider[String]'>
-            <argument key='value' type='String' value='temporary placeholder for a random commentxx' />
-          </argument>
-        </setter>
       </setter_chain>
       <cardinality_estimator type='linear_scale_estimator'>
         <argument key='base_cardinality' type='I64u' value='%customer.sequence.base_cardinality%' />
@@ -549,7 +517,6 @@
         <field name='clerk_key' type='I64u' />
         <field name='clerk' type='String' derived='true' />
         <field name='ship_priority' type='I16u' />
-        <field name='comment' type='String' />
         <field name='lineitems_count' type='I32u' />
       </record_type>
       <output_format type='csv'>
@@ -563,7 +530,6 @@
         <argument key='field' type='field_ref' ref='order:order_priority' />
         <argument key='field' type='field_ref' ref='order:clerk' />
         <argument key='field' type='field_ref' ref='order:ship_priority' />
-        <argument key='field' type='field_ref' ref='order:comment' />
       </output_format>
       <setter_chain>
         <setter key='set_order_key' type='field_setter'>
@@ -616,12 +582,6 @@
             <argument key='value' type='I16u' value='0' />
           </argument>
         </setter>
-        <setter key='set_comment' type='field_setter'> <!-- @FIXME: generate according to specification -->
-          <argument key='field' type='field_ref' ref='order:comment' />
-          <argument key='value' type='const_value_provider[String]'>
-            <argument key='value' type='String' value='pholder for a random comment' />
-          </argument>
-        </setter>
         <setter key='set_lineitems_count' type='field_setter'>
           <argument key='field' type='field_ref' ref='order:lineitems_count' />
           <argument key='value' type='random_value_provider[I32u]'>
@@ -655,7 +615,6 @@
         <field name='line_status' type='Char' />
         <field name='ship_instruct' type='Enum' enumref='lineitem.ship_instruction' />
         <field name='ship_mode' type='Enum' enumref='lineitem.ship_mode' />
-        <field name='comment' type='String' />
         <reference name="order" type="order" />
         <reference name="part_supp" type="part_supp" />
         <reference name="part" type="part" />
@@ -678,7 +637,6 @@
         <argument key='field' type='field_ref' ref='lineitem:receipt_date' />
         <argument key='field' type='field_ref' ref='lineitem:ship_instruct' />
         <argument key='field' type='field_ref' ref='lineitem:ship_mode' />
-        <argument key='field' type='field_ref' ref='lineitem:comment' />
       </output_format>
       <setter_chain>
         <setter key='set_order' type='reference_setter'>
@@ -799,12 +757,6 @@
             <argument key='probability' type='function_ref' ref='Pr[lineitem.ship_mode]' />
           </argument>
         </setter>
-        <setter key='set_comment' type='field_setter'> <!-- @FIXME: generate according to specification -->
-          <argument key='field' type='field_ref' ref='lineitem:comment' />
-          <argument key='value' type='const_value_provider[String]'>
-            <argument key='value' type='String' value='comment pholder' />
-          </argument>
-        </setter>
       </setter_chain>
       <cardinality_estimator type='linear_scale_estimator'>
         <argument key='base_cardinality' type='I64u' value='%lineitem.sequence.base_cardinality%' />
@@ -817,7 +769,6 @@
         <field name='nation_key' type='I64u' />
         <field name='name' type='Enum' enumref='nation.name' />
         <field name='region_key' type='Enum' enumref='nation.region_key' />
-        <field name='comment' type='String' />
       </record_type>
       <output_format type='csv'>
         <argument key='quoted' type='Bool' value='false' />
@@ -825,7 +776,6 @@
         <argument key='field' type='field_ref' ref='nation:nation_key' />
         <argument key='field' type='field_ref' ref='nation:name' />
         <argument key='field' type='field_ref' ref='nation:region_key' />
-        <argument key='field' type='field_ref' ref='customer:comment' />
       </output_format>
       <setter_chain>
         <setter key='set_nation_key' type='field_setter'>
@@ -858,12 +808,6 @@
             </argument>
           </argument>
         </setter>
-        <setter key='set_comment' type='field_setter'> <!-- @FIXME: generate according to specification -->
-          <argument key='field' type='field_ref' ref='nation:comment' />
-          <argument key='value' type='const_value_provider[String]'>
-            <argument key='value' type='String' value='temp. p-holder.' />
-          </argument>
-        </setter>
       </setter_chain>
       <cardinality_estimator type='const_estimator'>
         <argument key='cardinality' type='I64u' value='%nation.sequence.cardinality%' />
@@ -875,14 +819,12 @@
       <record_type>
         <field name='region_key' type='I64u' />
         <field name='name' type='Enum' enumref='region.name' />
-        <field name='comment' type='String' />
       </record_type>
       <output_format type='csv'>
         <argument key='quoted' type='Bool' value='false' />
         <argument key='delimiter' type='Char' value='|' />
         <argument key='field' type='field_ref' ref='region:region_key' />
         <argument key='field' type='field_ref' ref='region:name' />
-        <argument key='field' type='field_ref' ref='customer:comment' />
       </output_format>
       <setter_chain>
         <setter key='set_region_key' type='field_setter'>
@@ -903,12 +845,6 @@
               <argument key='min' type='Enum' value='0' />
               <argument key='max' type='Enum' value='%region.sequence.cardinality%' />
             </argument>
-          </argument>
-        </setter>
-        <setter key='set_comment' type='field_setter'> <!-- @FIXME: generate according to specification -->
-          <argument key='field' type='field_ref' ref='region:comment' />
-          <argument key='value' type='const_value_provider[String]'>
-            <argument key='value' type='String' value='temporary placeholder for a random comment' />
           </argument>
         </setter>
       </setter_chain>
